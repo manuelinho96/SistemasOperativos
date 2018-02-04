@@ -8,14 +8,21 @@ Estudiantes:
 
 #include<stdlib.h>
 
+struct Producto
+{
+    char Nombre[1000];
+    double Peso;
+    int complejidad;
+};
+
 /************************ LISTELEMENT ************************/
 /*
 TIPO: Estructura de datos
 DESCRIPCION: Implementacion de un nodo que contendra dos
 estructuras para simular una lista simple */
-typedef struct ListElement{
-	char *item; //struct Producto *item; 
-	struct ListElement *next;
+typedef struct StackElement{
+	struct Producto *item; 
+	struct StackElement *next;
 }Element;
 
 /************************ LISTELEMENT ************************/
@@ -46,13 +53,13 @@ TIPO: Funcion
 DESCRIPCION: Funcion que agrega un elemento a la lista, de
 			 esta manera se hace la operacion de apilar
 ENTRADA: s ----> Stack
-		 i ----> Producto
+		 itm --> Producto
 SALIDA:  int (-1 para error y 0 para exito) */
-int push(Stack *s, char *itm){
+int push(Stack *s, struct Producto *itm){
 	Element *new_element;
 	if ((new_element = (Element *) malloc (sizeof (Element))) == NULL) return -1;
-	if ((new_element->item = (char *) malloc (50 * sizeof (char))) == NULL) return -1;
-	strcpy (new_element->item, itm);
+	if ((new_element->item = (struct Producto *) malloc (50 * sizeof (struct Producto))) == NULL) return -1;
+	memcpy (new_element->item, itm,sizeof (new_element->item));
 	new_element->next = s->head;
 	s->head = new_element;
 	s->size++;
@@ -76,7 +83,7 @@ int pop(Stack *s){
 	return 0;
 }
 /* Visualización del elemento en la cabeza de la pila (LastInFirstOut) */
-#define stack_data(s) s->head->item
+#define stack_data(s) s->head->item->Nombre
 /************************** SHOW **************************/
 /*
 TIPO: Funcion 
@@ -87,7 +94,7 @@ void show(Stack *s){
 	int i;
 	actual = s->head;
 	for(i=0; i < s->size;i++){
-		printf("\t\t%s\n", actual->item);
+		printf("\t\t%s\n", actual->item->Nombre);
 		actual = actual->next;
 	}
 }

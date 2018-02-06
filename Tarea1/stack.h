@@ -71,7 +71,9 @@ TIPO: Funcion
 DESCRIPCION: Funcion que elimina un elemento a la lista, de
 			 esta manera se hace la operacion de desenpilar
 ENTRADA: s ----> Stack
-SALIDA:  int (-1 para error y 0 para exito) */
+SALIDA:  recovery ---> struct Producto (retorna NULL si hubo
+					   error y retorna la estructura en caso
+					   contrario) */
 struct Producto *pop(Stack *s){
 	Element *del_element;
 	struct Producto *recovery;

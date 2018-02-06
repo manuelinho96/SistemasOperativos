@@ -63,6 +63,16 @@ int add(struct ListaEnlazada * Lista, struct Producto * Dato1)
     }
 };
 
+struct Producto removeelementlist(struct ListaEnlazada *Lista){
+    if (Lista->head != NULL){
+        struct Producto *Dato = Lista->head->Dato;
+        struct NodoLista *borrado = Lista->head;
+        Lista->head = Lista->head->next;
+        free(borrado);
+        return *Dato;
+    }
+}
+
 int removelist(struct ListaEnlazada * Lista){
     struct NodoLista * actual = Lista->head;
     struct NodoLista *borrado;
@@ -82,37 +92,6 @@ void imprimirlista(struct ListaEnlazada *lista){
         actual = actual->next;
     }
     printf("\n");
-}
-
-
-int main(){
-
-    struct ListaEnlazada *l;
-    l = malloc(sizeof(struct ListaEnlazada));
-    Inicialize(l);
-    struct Producto *p;
-    p = malloc(sizeof(struct Producto));
-    strcpy(p->Nombre, "100");
-    p->Peso = 100;
-    add(l, p);
-    p = malloc(sizeof(struct Producto));
-    strcpy(p->Nombre, "50");
-    p->Peso = 50;
-    add(l, p);
-    p = malloc(sizeof(struct Producto));
-    strcpy(p->Nombre, "30");
-    p->Peso = 30;
-    add(l,p);
-    p = malloc(sizeof(struct Producto));
-    strcpy(p->Nombre, "75");
-    p->Peso = 70;
-    imprimirlista(l);
-    add(l, p);
-    removelist(l);
-    imprimirlista(l);
-    add(l, p);
-    imprimirlista(l);
-
 }
 
 

@@ -1,24 +1,13 @@
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
-
-struct Producto
-{
-    char Nombre[1000];
-    double Peso;
-    int complejidad;
-};
-
 struct NodoLista
 {
     struct Producto * Dato;
     struct NodoLista * next;
 };
 
-struct ListaEnlazada
+typedef struct ListaEnlazada
 {
     struct NodoLista * head;
-};
+}ListaEnlazada;
 
 void Inicialize(struct ListaEnlazada * Lista)
 {
@@ -26,7 +15,7 @@ void Inicialize(struct ListaEnlazada * Lista)
 };
 
 
-int add(struct ListaEnlazada * Lista, struct Producto * Dato1)
+int addelementlist(struct ListaEnlazada * Lista, struct Producto * Dato1)
 {
 
     struct NodoLista *nodo;
@@ -63,13 +52,13 @@ int add(struct ListaEnlazada * Lista, struct Producto * Dato1)
     }
 };
 
-struct Producto removeelementlist(struct ListaEnlazada *Lista){
+struct Producto *removeelementlist(struct ListaEnlazada *Lista){
     if (Lista->head != NULL){
         struct Producto *Dato = Lista->head->Dato;
         struct NodoLista *borrado = Lista->head;
         Lista->head = Lista->head->next;
         free(borrado);
-        return *Dato;
+        return Dato;
     }
 }
 
@@ -87,6 +76,7 @@ int removelist(struct ListaEnlazada * Lista){
 
 void imprimirlista(struct ListaEnlazada *lista){
     struct NodoLista *actual = lista->head;
+    printf("Lista de elementos de la lista: ");
     while(actual != NULL){
         printf("%s - ", actual->Dato->Nombre);
         actual = actual->next;

@@ -1,13 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-struct Producto{
-    char Nombre[1000];
-    int Peso;
-    int Complejidad;
-};
-
 struct nodocola {
     struct Producto *Dato;
     struct nodocola *siguiente;
@@ -67,7 +57,7 @@ void liberarcola(ColaCarrito *cola){
     }
 }
 
-struct Producto extraernodocola(ColaCarrito *cola){
+struct Producto *extraernodocola(ColaCarrito *cola){
     if (!colavacia(cola)){
         struct Producto *Dato = cola->nraiz->Dato;
         struct nodocola *borrado = cola->nraiz;
@@ -79,21 +69,8 @@ struct Producto extraernodocola(ColaCarrito *cola){
             cola->nraiz = cola->nraiz->siguiente;
         }
         free(borrado);
-        return *Dato;
+        return Dato;
     }
-}
-
-
-int main(){
-    struct Producto *p;
-    ColaCarrito *c1;
-    c1 = malloc(sizeof(ColaCarrito));
-    iniciarcola(c1);
-    p = malloc(sizeof(struct Producto));
-    strcpy(p->Nombre, "manuel");
-    insertarnodocola(p, c1);
-    extraernodocola(c1);
-    imprimircola(c1);
 }
 
 

@@ -6,15 +6,6 @@ Estudiantes:
 - David Segura		# 13-11341
 */
 
-#include<stdlib.h>
-
-struct Producto
-{
-    char Nombre[1000];
-    double Peso;
-    int complejidad;
-};
-
 /************************ LISTELEMENT ************************/
 /*
 TIPO: Estructura de datos
@@ -59,7 +50,7 @@ int push(Stack *s, struct Producto *itm){
 	Element *new_element;
 	if ((new_element = (Element *) malloc (sizeof (Element))) == NULL) return -1;
 	if ((new_element->item = (struct Producto *) malloc (50 * sizeof (struct Producto))) == NULL) return -1;
-	memcpy (new_element->item, itm,sizeof (new_element->item));
+	memcpy (new_element->item, itm,sizeof (struct Producto));
 	new_element->next = s->head;
 	s->head = new_element;
 	s->size++;
@@ -72,15 +63,18 @@ DESCRIPCION: Funcion que elimina un elemento a la lista, de
 			 esta manera se hace la operacion de desenpilar
 ENTRADA: s ----> Stack
 SALIDA:  int (-1 para error y 0 para exito) */
-int pop(Stack *s){
+Producto pop(Stack *s){
+	Producto *Dato;
 	Element *del_element;
-	if (s->size == 0) return -1;
-	del_element = s->head;
-	s->head = s->head->next;
-	free (del_element->item);
-	free (del_element);
-	s->size--;
-	return 0;
+	if (s->size != 0){
+		del_element = s->head;
+		Dato = del_element->item;
+		s->head = s->head->next;
+		free (del_element->item);
+		free (del_element);
+		s->size--;
+		return *Dato;
+	}
 }
 /* Visualización del elemento en la cabeza de la pila (LastInFirstOut) */
 #define stack_data(s) s->head->item->Nombre
@@ -93,8 +87,9 @@ void show(Stack *s){
 	Element *actual;
 	int i;
 	actual = s->head;
+	printf("Lista de elementos en la pila: ");
 	for(i=0; i < s->size;i++){
-		printf("\t\t%s\n", actual->item->Nombre);
+		printf("%s\n", actual->item->Nombre);
 		actual = actual->next;
 	}
 }

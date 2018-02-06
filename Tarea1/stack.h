@@ -57,9 +57,9 @@ ENTRADA: s ----> Stack
 SALIDA:  int (-1 para error y 0 para exito) */
 int push(Stack *s, struct Producto *itm){
 	Element *new_element;
-	if ((new_element = (Element *) malloc (sizeof (Element))) == NULL) return -1;
-	if ((new_element->item = (struct Producto *) malloc (50 * sizeof (struct Producto))) == NULL) return -1;
-	memcpy (new_element->item, itm,sizeof (new_element->item));
+	if ((new_element = malloc (sizeof (Element))) == NULL) return -1;
+	if ((new_element->item = malloc (sizeof (struct Producto))) == NULL) return -1;
+	new_element->item = itm;
 	new_element->next = s->head;
 	s->head = new_element;
 	s->size++;
@@ -72,15 +72,17 @@ DESCRIPCION: Funcion que elimina un elemento a la lista, de
 			 esta manera se hace la operacion de desenpilar
 ENTRADA: s ----> Stack
 SALIDA:  int (-1 para error y 0 para exito) */
-int pop(Stack *s){
+struct Producto *pop(Stack *s){
 	Element *del_element;
-	if (s->size == 0) return -1;
+	struct Producto *recovery;
+	if (s->size == 0) return NULL;
 	del_element = s->head;
+	recovery = s->head->item;
 	s->head = s->head->next;
 	free (del_element->item);
 	free (del_element);
 	s->size--;
-	return 0;
+	return recovery;
 }
 /* Visualización del elemento en la cabeza de la pila (LastInFirstOut) */
 #define stack_data(s) s->head->item->Nombre

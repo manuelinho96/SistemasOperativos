@@ -43,10 +43,20 @@ struct Producto **LeerProductos(){
     return Productos;
 }
 
-void imprimirproductos(Producto **Productos){
+void imprimirproductos(){
         for(int j = 0; j<cantidaddeproductos; j++){
         printf("Nombre: %s", Productos[j]->Nombre);
         printf(" Peso: %d", Productos[j]->Peso);
         printf(" Complejidad: %d\n", Productos[j]->Complejidad);
+    }
+}
+
+void generarcarrito(ListaEnlazada *Carrito){
+    int productoscarrito;
+    int producto;
+    productoscarrito = rand() % maxproductscarrito;
+    for (int j = 0; j < productoscarrito; j++){
+        producto = rand() % cantidaddeproductos;
+        addelementlist(Carrito, Productos[producto]);
     }
 }

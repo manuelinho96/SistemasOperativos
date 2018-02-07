@@ -1,4 +1,4 @@
-const char *modalidad = "Iterativa";
+const char *modalidad = "interativa";
 int carritoEnCola = 3;
 int maxproductscarrito = 30;
 int maxbt = 200;
@@ -8,6 +8,8 @@ int tiempofacturacion = 130;
 int maxareaembolsado = 150;
 int maxbolsa = 120;
 int cantidaddeproductos;
+int cantidaddecarritos;
+Producto **Productos;
 
 void imprimiropciones(){
     printf("La modalidad es: %s\n", modalidad);

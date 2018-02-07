@@ -7,11 +7,15 @@
 #include "ListaEnlazada.c"
 #include "configuracion.h"
 #include "simulacion.c"
+#include <time.h>
 
 void menu();
 
+void interactiva(ListaEnlazada *Carrito);
+
+void automatica(ListaEnlazada *Carrito);
+
 int main (){
-    Producto **Productos;
     int opcion;
     while(1){
         menu();
@@ -19,9 +23,18 @@ int main (){
             printf("Ingrese una opcion: ");
             scanf("%d", &opcion);
             if ( opcion == 1 ){
+                srand(time(NULL));
+                ListaEnlazada *Carrito;
+                ListaEnlazada *BandaT;
+                Carrito = malloc(sizeof(ListaEnlazada));
+                Inicialize(Carrito);
+                Inicialize(BandaT);
+                cantidaddecarritos = rand();
                 Productos = LeerProductos();
-                imprimirproductos(Productos);
-
+                if ( modalidad == "interactiva" ) interactiva(Carrito);
+                else{
+                    automatica(Carrito);
+                } 
             }
             else if ( opcion == 2 ){
                 configuracion();
@@ -41,4 +54,12 @@ void menu(){
     printf("1. Ejecutar la Simulacion\n");
     printf("2. Cambiar las opciones de la simulacion\n");
     printf("3. Salir del programa\n");
+}
+
+void interactiva(ListaEnlazada *Carrito){
+
+}
+
+void automatica(ListaEnlazada *Carrito){
+    
 }

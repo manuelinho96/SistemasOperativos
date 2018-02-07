@@ -1,5 +1,5 @@
 typedef struct Producto{
-    char Nombre[1000];
+    char Nombre[100];
     int Peso;
     int Complejidad;
 }Producto;

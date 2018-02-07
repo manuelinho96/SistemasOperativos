@@ -7,6 +7,7 @@ int velocidadembolsador = 4;
 int tiempofacturacion = 130;
 int maxareaembolsado = 150;
 int maxbolsa = 120;
+int cantidaddeproductos;
 
 void imprimiropciones(){
     printf("La modalidad es: %s\n", modalidad);

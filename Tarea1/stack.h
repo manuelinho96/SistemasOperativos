@@ -72,7 +72,6 @@ struct Producto *pop(Stack *s){
 	del_element = s->head;
 	recovery = s->head->item;
 	s->head = s->head->next;
-	free (del_element->item);
 	free (del_element);
 	s->size--;
 	return recovery;

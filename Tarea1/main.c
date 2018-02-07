@@ -1,17 +1,17 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "producto.h"
 #include "cola.h"
 #include "stack.h"
 #include "ListaEnlazada.c"
 #include "configuracion.h"
-#include "simulacion.h"
+#include "simulacion.c"
 
 void menu();
 
 int main (){
-
+    Producto **Productos;
     int opcion;
     while(1){
         menu();
@@ -19,13 +19,20 @@ int main (){
             printf("Ingrese una opcion: ");
             scanf("%d", &opcion);
             if ( opcion == 1 ){
-                simulacion();
-                break;
+                Productos = LeerProductos();
+                imprimirproductos(Productos);
+
             }
-            if ( opcion == 2 ){
+            else if ( opcion == 2 ){
                 configuracion();
-                break;
             }
+            else if (opcion == 3){
+                return 0;
+            }
+            else{
+                printf("Introdujo una opcion erronea");
+            }
+            break;
         }
     }
 }

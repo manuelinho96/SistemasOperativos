@@ -72,14 +72,3 @@ struct Producto *extraernodocola(ColaCarrito *cola){
         return Dato;
     }
 }
-
-
-
-
-
-
-
-
-
-
-

@@ -76,8 +76,6 @@ struct Producto *pop(Stack *s){
 	s->size--;
 	return recovery;
 }
-/* Visualización del elemento en la cabeza de la pila (LastInFirstOut) */
-#define stack_data(s) s->head->item->Nombre
 /************************** SHOW **************************/
 /*
 TIPO: Funcion 

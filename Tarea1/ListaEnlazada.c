@@ -76,7 +76,6 @@ int removelist(struct ListaEnlazada * Lista){
 
 void imprimirlista(struct ListaEnlazada *lista){
     struct NodoLista *actual = lista->head;
-    printf("Lista de elementos de la lista: ");
     while(actual != NULL){
         printf("%s - ", actual->Dato->Nombre);
         actual = actual->next;

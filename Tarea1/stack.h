@@ -74,6 +74,7 @@ struct Producto *pop(Stack *s){
 	s->head = s->head->next;
 	free (del_element);
 	s->size--;
+	if(s->size == 0) s->head = NULL;
 	return recovery;
 }
 /************************** SHOW **************************/
@@ -86,9 +87,14 @@ void show(Stack *s){
 	int i;
 	actual = s->head;
 	for(i=0; i < s->size;i++){
-		printf("%s\n", actual->item->Nombre);
-		actual = actual->next;
+		if(i == (s->size)-1){
+			printf("%s\n", actual->item->Nombre);
+		}else{
+			printf("%s -", actual->item->Nombre);
+			actual = actual->next;
+		}
 	}
+	printf("\n");
 }
 
 /***************Calcular Area de la Pila**********/

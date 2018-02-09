@@ -40,8 +40,13 @@ void insertarnodocola(struct Producto *producto, ColaCarrito *cola){
 void imprimircola(ColaCarrito *cola){
     struct nodocola *actual = cola->nraiz;
     while(actual != NULL){
-        printf("%s - ", actual->Dato->Nombre);
-        actual = actual->siguiente;
+        if(actual->siguiente != NULL ){
+            printf("%s - ", actual->Dato->Nombre);
+            actual = actual->siguiente;
+        }else{
+            printf("%s", actual->Dato->Nombre);
+            actual = actual->siguiente;
+        }
     }
     printf("\n");
 }

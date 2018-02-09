@@ -85,9 +85,21 @@ void show(Stack *s){
 	Element *actual;
 	int i;
 	actual = s->head;
-	printf("Lista de elementos en la pila: ");
 	for(i=0; i < s->size;i++){
 		printf("%s\n", actual->item->Nombre);
 		actual = actual->next;
 	}
+}
+
+/***************Calcular Area de la Pila**********/
+
+int AreaPila(Stack *s){
+	Element *actual;
+	actual = s->head;
+	int area = 0;
+	for(int i=0; i < s->size;i++){
+		area += actual->item->Peso;
+		actual = actual->next;
+	}
+	return area;
 }

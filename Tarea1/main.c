@@ -8,12 +8,21 @@
 #include "configuracion.h"
 #include "simulacion.c"
 #include <time.h>
+#include <math.h>
 
 void menu();
 
-void interactiva(ListaEnlazada *Carrito, ListaEnlazada *BandaT, Stack *Pila, ColaCarrito *Cola);
+void interactiva(ListaEnlazada *Carrito,ColaCarrito *BandaT, Stack *Pila);
 
 void automatica(ListaEnlazada *Carrito);
+
+void moveralabanda(ListaEnlazada *Carrito, ColaCarrito *BandaT, int *volumen);
+
+int procesamiento(ColaCarrito *BandaT,Stack *Pila,int *volumen);
+
+int embolsar(Stack *Pila, ListaEnlazada *Bolsa, int *volumen);
+
+
 
 int main (){
     int opcion;
@@ -35,8 +44,8 @@ int main (){
                 initialization(Pila);
                 cantidaddecarritos = rand();
                 Productos = LeerProductos();
-                generarcarrito(Carrito);
-                if ( modalidad == "interactiva" )interactiva(Carrito,BandaT,Pila);
+                generarcarrito(Carrito); 
+                if ( modalidad == "interactiva" ) interactiva(Carrito,BandaT,Pila);
                 else{
                     automatica(Carrito);
                 } 
@@ -73,39 +82,44 @@ void interactiva(ListaEnlazada *Carrito,ColaCarrito *BandaT, Stack *Pila){
 	printf("Presiona Enter para iniciar la simulacion");
 	fflush(stdin);
 	getchar();
-	while (Carrito->head!=NULL && BandaT->nraiz!=NULL && Pila->head!=NULL){
-		printf("Lista de elementos aun en el carrito:");
+	do{
+		printf("Lista de elementos aun en el carrito: ");
 		imprimirlista(Carrito);
-		printf("Lista de elementos en la banda transportadora:");
+		printf("Lista de elementos en la banda transportadora: ");
 		imprimircola(BandaT);
-		printf("Lista de elementos en el area de embolsado:");
+		printf("Lista de elementos en el area de embolsado: ");
 		show(Pila);
-		printf("Lista de elementos embolsados:"); //PENEDIENTE
-		imprimirlista(Cola);
+		printf("Lista de elementos embolsados: "); //PENEDIENTE
+		//imprimirlista(Cola);
 		moveralabanda(Carrito,BandaT,&volumenbt);
-		if ((tiempo - tiempoprocesamiento) == tiempoinicio){
-			tiempoinicio = tiempo;
-			tiempoprocesamiento = procesamiento(BandaT,Pila,&volumenbt);
-			if (tiempo>0){
-				push(Pila,extraernodocola(BandaT));
+		if(BandaT->nraiz->Dato->Peso+AreaPila(Pila) <= maxareaembolsado){
+			if ((tiempo - tiempoprocesamiento) == tiempoinicio){
+				tiempoinicio = tiempo;
+				tiempoprocesamiento = procesamiento(BandaT,Pila,&volumenbt);
+				if (tiempo>0){
+					push(Pila,extraernodocola(BandaT));
+				}
 			}
 		}
 		if (Pila->head!=NULL){
-			if (embolsar(Pila,Bolsa,volumenbo) == 1){
+			//if (embolsar(Pila,Bolsa,&volumenbo) == 1){
 				// AGREGAMOS LA BOLSA A UNA LISTA DE APUNTADORES
 				// CREAMOS UNA INSTANCIA NUEVA DE LA BOLSA
-				free(Bolsa);
+				//free(Bolsa);
 			}
 		}
+		fflush(stdin);
+		printf("\nPresiona Enter para continuar la simulacion: ");
+		getchar();
 		tiempo ++;
-	}
+	}while (Carrito->head!=NULL || BandaT->nraiz!=NULL || Pila->head!=NULL);
 }
 
 void moveralabanda(ListaEnlazada *Carrito, ColaCarrito *BandaT, int *volumen){
 	// DESPUES VERIFICAR SI EL OBJETO SUPERA LA CAPACIDAD DE LA BANDA
 	while (Carrito->head->Dato->Peso + *volumen <= maxbt && Carrito->head != NULL){
 		struct Producto *objeto = removeelementlist(Carrito);
-		addelementlist(BandaT,objeto);
+		insertarnodocola(objeto, BandaT);
 		*volumen += objeto->Peso;
 	}
 }
@@ -113,7 +127,7 @@ void moveralabanda(ListaEnlazada *Carrito, ColaCarrito *BandaT, int *volumen){
 int procesamiento(ColaCarrito *BandaT,Stack *Pila,int *volumen){
 	struct Producto *item = BandaT->nraiz->Dato;
 	*volumen -= item -> Peso;
-	return item->Complejidad / velocidadcajera; // FUNCION TECHO
+	return ceil(item->Complejidad / velocidadcajera); // FUNCION TECHO
 }
 
 int embolsar(Stack *Pila, ListaEnlazada *Bolsa, int *volumen){ //PASAR DE BANDA DE TRANSBORDADORA
@@ -131,5 +145,4 @@ int embolsar(Stack *Pila, ListaEnlazada *Bolsa, int *volumen){ //PASAR DE BANDA 
 }
 
 void automatica(ListaEnlazada *Carrito){
-    
 }

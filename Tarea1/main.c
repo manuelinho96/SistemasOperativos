@@ -80,35 +80,49 @@ void interactiva(ListaEnlazada *Carrito,ColaCarrito *BandaT, Stack *Pila, ListaE
 	int facturacion = 0;
 	int volumenbt = 0;
 	ListaEnlazada *Bolsa;
+	struct Producto *Producto;
 	Bolsa = malloc(sizeof(ListaEnlazada));
 	Inicialize(Bolsa);
 	printf("Presiona Enter para iniciar la simulacion");
 	fflush(stdin);
 	getchar();
+	printf("----Tiempo transcurrido: %d s.----\n",tiempo);
 	printf("Lista de elementos en el carrito: ");
 	imprimirlista(Carrito);
 	printf("Lista de elementos en la banda transportadora: ");
 	imprimircola(BandaT);
 	printf("Lista de elementos en el area de embolsado: ");
 	show(Pila);
-	printf("Lista de elementos embolsados: "); //PENEDIENTE
+	printf("Lista de elementos embolsados: \n"); //PENEDIENTE
 	imprimirlistabolsa(Bolsas);
 	do{
-		moveralabanda(Carrito,BandaT,&volumenbt);
-		if(BandaT->nraiz->Dato->Peso+AreaPila(Pila) <= maxareaembolsado || 
-		(BandaT->nraiz->Dato->Peso > maxareaembolsado && Pila->size == 0)){
+		if (Carrito->head != NULL){ //NUEVO
+			moveralabanda(Carrito,BandaT,&volumenbt);
+		}
+		if (BandaT->nraiz != NULL){ // NUEVO
+			if(BandaT->nraiz->Dato->Peso+AreaPila(Pila) <= maxareaembolsado || 
+			(BandaT->nraiz->Dato->Peso > maxareaembolsado && Pila->size == 0)){
+				if ((tiempo - tiempoprocesamiento) == tiempoinicio){
+					tiempoinicio = tiempo;
+					Producto= extraernodocola(BandaT);
+					tiempoprocesamiento = procesamiento(Producto,&volumenbt);
+					if(Producto->Peso <= maxbolsa && tiempo > 0) push(Pila,Producto);
+					else{
+						if(tiempo > 0) addelementlist(Bolsas, Producto);
+					}
+				}
+			}else{
+				tiempoinicio++;
+			}
+		}
+		else{ // NUEVO
 			if ((tiempo - tiempoprocesamiento) == tiempoinicio){
-				tiempoinicio = tiempo;
-				struct Producto *Producto = extraernodocola(BandaT);
-				tiempoprocesamiento = procesamiento(Producto,&volumenbt);
 				if(Producto->Peso <= maxbolsa && tiempo > 0) push(Pila,Producto);
 				else{
 					if(tiempo > 0) addelementlist(Bolsas, Producto);
 				}
 			}
-		}else{
-			tiempoinicio++;
-		}
+		} // NUEVO FIN
 		if (Pila->head!=NULL && tiempo % velocidadembolsador == 0){
 			embolsar(Pila,Bolsa);
 			ListaEnlazada *BolsaAuxiliar;
@@ -120,6 +134,7 @@ void interactiva(ListaEnlazada *Carrito,ColaCarrito *BandaT, Stack *Pila, ListaE
 			Inicialize(Bolsa);
 		}
 		if(tiempo>0){
+			printf("----Tiempo transcurrido: %d s.----\n",tiempo);
 			printf("Lista de elementos en el carrito: ");
 			imprimirlista(Carrito);
 			printf("Lista de elementos en la banda transportadora: ");
@@ -143,6 +158,9 @@ void moveralabanda(ListaEnlazada *Carrito, ColaCarrito *BandaT, int *volumen){
 		struct Producto *objeto = removeelementlist(Carrito);
 		insertarnodocola(objeto, BandaT);
 		*volumen += objeto->Peso;
+		if (Carrito->head == NULL){ //NUEVO
+			break;
+		}
 	}
 	if(BandaT->nraiz == NULL && Carrito->head->Dato->Peso > maxbt){
 		struct Producto *objeto = removeelementlist(Carrito);

@@ -1,6 +1,6 @@
 struct NodoLista
 {
-    struct ListaEnlazada *Bolsa;
+    struct Producto **Bolsa;
     struct Producto * Dato;
     struct NodoLista * next;
     int esBolsa;
@@ -18,7 +18,7 @@ void Inicialize(struct ListaEnlazada * Lista)
 
 
 
-int anadirbolsa(struct ListaEnlazada * Lista, struct ListaEnlazada *Bolsa){
+int anadirbolsa(struct ListaEnlazada * Lista, struct Producto **Bolsa){
     struct NodoLista *nodo;
     struct NodoLista *actual = Lista->head;
     struct NodoLista *anterior = NULL;
@@ -122,7 +122,7 @@ void imprimirlistabolsa(struct ListaEnlazada *lista){
     while(actual != NULL){
         if(actual->next != NULL && actual->esBolsa == 1){
             printf("Bolsa numero: %d ", i);
-            imprimirlista(actual->Bolsa);
+            //imprimirlista(actual->Bolsa);
             actual = actual->next;
             i++;
         }
@@ -132,7 +132,7 @@ void imprimirlistabolsa(struct ListaEnlazada *lista){
         }
         else if(actual->next == NULL && actual->esBolsa == 1){
             printf("Bolsa numero: %d ", i);
-            imprimirlista(actual->Bolsa);
+            //imprimirlista(actual->Bolsa);
             actual = actual->next;
             i++;
         }

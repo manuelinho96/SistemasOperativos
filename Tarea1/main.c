@@ -3,9 +3,9 @@
 #include <string.h>
 #include "producto.h"
 #include "cola.h"
+#include "configuracion.h"
 #include "stack.h"
 #include "ListaEnlazada.c"
-#include "configuracion.h"
 #include "simulacion.c"
 #include <time.h>
 #include <math.h>
@@ -20,7 +20,7 @@ void moveralabanda(ListaEnlazada *Carrito, ColaCarrito *BandaT, int *volumen);
 
 int procesamiento(Producto *Producto,int *volumen);
 
-void embolsar(Stack *Pila, ListaEnlazada *Bolsa);
+void embolsar(Stack *Pila, Producto **Bolsa, ListaEnlazada *Bolsas);
 
 
 
@@ -79,9 +79,7 @@ void interactiva(ListaEnlazada *Carrito,ColaCarrito *BandaT, Stack *Pila, ListaE
 	int tiempoinicio = 0;
 	int facturacion = 0;
 	int volumenbt = 0;
-	ListaEnlazada *Bolsa;
-	Bolsa = malloc(sizeof(ListaEnlazada));
-	Inicialize(Bolsa);
+	Producto **Bolsa;
 	printf("Presiona Enter para iniciar la simulacion");
 	fflush(stdin);
 	getchar();
@@ -110,14 +108,8 @@ void interactiva(ListaEnlazada *Carrito,ColaCarrito *BandaT, Stack *Pila, ListaE
 			tiempoinicio++;
 		}
 		if (Pila->head!=NULL && tiempo % velocidadembolsador == 0){
-			embolsar(Pila,Bolsa);
-			ListaEnlazada *BolsaAuxiliar;
-			BolsaAuxiliar = malloc(sizeof(Bolsa));
-			memcpy(BolsaAuxiliar, Bolsa, sizeof(Bolsa));
-			anadirbolsa(Bolsas, BolsaAuxiliar);
-			free(Bolsa);
-			Bolsa = malloc(sizeof(ListaEnlazada));
-			Inicialize(Bolsa);
+			printf("epale");
+			embolsar(Pila,Bolsa, Bolsas);
 		}
 		if(tiempo>0){
 			printf("Lista de elementos en el carrito: ");
@@ -127,7 +119,7 @@ void interactiva(ListaEnlazada *Carrito,ColaCarrito *BandaT, Stack *Pila, ListaE
 			printf("Lista de elementos en el area de embolsado: ");
 			show(Pila);
 			printf("Lista de elementos embolsados: ");
-			imprimirlistabolsa(Bolsas);
+			//imprimirlistabolsa(Bolsas);
 		}
 		fflush(stdin);
 		printf("\nPresiona Enter para continuar la simulacion: ");
@@ -155,16 +147,18 @@ int procesamiento(Producto *Producto,int *volumen){
 	return Producto->Complejidad / velocidadcajera; // FUNCION TECHO
 }
 
-void embolsar(Stack *Pila, ListaEnlazada *Bolsa){ //PASAR DE BANDA DE TRANSBORDADORA
+void embolsar(Stack *Pila, Producto **Bolsa, ListaEnlazada *Bolsas){ //PASAR DE BANDA DE TRANSBORDADORA
 	int volumen = 0;
-	while (Pila->head != NULL){
-		if ( Pila->head->item->Peso + volumen <= maxbolsa ){
-			struct Producto *objeto = pop(Pila);
-			addelementlist(Bolsa,objeto);
-			volumen += objeto->Peso;
-			imprimirlista(Bolsa);
-		}
+	int elementos = elementos_embolsar(Pila);
+	Bolsa = malloc(elementos*sizeof(Producto));
+	for(int i = 0; i<elementos; i++){
+		Bolsa[i] = pop(Pila);
 	}
+	Producto **BolsaAuxiliar;
+	BolsaAuxiliar = malloc(sizeof(Bolsa));
+	memcpy(BolsaAuxiliar, Bolsa, sizeof(Bolsa));
+	anadirbolsa(Bolsas, BolsaAuxiliar);
+	free(Bolsa);
 }
 
 void automatica(ListaEnlazada *Carrito){

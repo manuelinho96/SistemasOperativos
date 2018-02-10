@@ -109,3 +109,15 @@ int AreaPila(Stack *s){
 	}
 	return area;
 }
+
+int elementos_embolsar(Stack *s){
+	Element *actual;
+	actual = s->head;
+	int elementos = 0;
+	int volumen = 0;
+	while(actual != NULL){
+		if ( s->head->item->Peso + volumen <= maxbolsa ) elementos++;
+		actual = actual->next;
+	}
+	return elementos;
+}

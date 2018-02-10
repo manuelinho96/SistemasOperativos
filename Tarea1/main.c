@@ -113,23 +113,17 @@ void interactiva(ListaEnlazada *Carrito,ColaCarrito *BandaT, Stack *Pila, ListaE
 							addelementlist(Bolsas, extraernodocola(BandaT));
 						}
 					}
-					Producto= BandaT->nraiz->Dato;
-					tiempoprocesamiento = Producto->Complejidad / velocidadcajera;
-					printf("--------TIEMPO PROCESAMIENTO: %d seg.----------\n",tiempoprocesamiento);
+					if (BandaT->nraiz != NULL){
+						Producto = BandaT->nraiz->Dato;
+						tiempoprocesamiento = Producto->Complejidad / velocidadcajera;
+					}
 				}
 			}else{;
 				tiempoinicio++;
 			}
 		}
-		else{ // NUEVO
-			if ((tiempo - tiempoprocesamiento) == tiempoinicio){
-				if(Producto->Peso <= maxbolsa && tiempo > 0) push(Pila,Producto);
-				else{
-					if(tiempo > 0) addelementlist(Bolsas, Producto);
-				}
-			}
-		} // NUEVO FIN
 		if (Pila->head!=NULL && tiempo % velocidadembolsador == 0){
+			show(Pila);
 			embolsar(Pila,Bolsa);
 			ListaEnlazada *BolsaAuxiliar;
 			BolsaAuxiliar = malloc(sizeof(Bolsa));
@@ -140,7 +134,6 @@ void interactiva(ListaEnlazada *Carrito,ColaCarrito *BandaT, Stack *Pila, ListaE
 			Inicialize(Bolsa);
 		}
 		if(tiempo>0){
-			printf("----Tiempo transcurrido: %d s.----\n",tiempo);
 			printf("Lista de elementos en el carrito: ");
 			imprimirlista(Carrito);
 			printf("\nLista de elementos en la banda transportadora: ");
@@ -154,8 +147,7 @@ void interactiva(ListaEnlazada *Carrito,ColaCarrito *BandaT, Stack *Pila, ListaE
 		printf("\nPresiona Enter para continuar la simulacion: ");
 		getchar();
 		tiempo ++;
-	}while (1); // Establecer una nueva condicion de parada. En la primera iteracion puede
-	//pasar que la banda se quede vacia y la pila tambien.
+	}while (Carrito->head != NULL || BandaT->nraiz != NULL || Pila->head !=NULL);
 }
 
 void moveralabanda(ListaEnlazada *Carrito, ColaCarrito *BandaT, int *volumen){

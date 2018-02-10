@@ -96,22 +96,25 @@ void interactiva(ListaEnlazada *Carrito,ColaCarrito *BandaT, Stack *Pila, ListaE
 	printf("Lista de elementos embolsados: \n"); //PENEDIENTE
 	imprimirlistabolsa(Bolsas);
 	do{
+		imprimirproductos();
 		if (Carrito->head != NULL){ //NUEVO
 			moveralabanda(Carrito,BandaT,&volumenbt);
 		}
 		if (BandaT->nraiz != NULL){ // NUEVO
-			if(BandaT->nraiz->Dato->Peso+AreaPila(Pila) <= maxareaembolsado || 
+			if((BandaT->nraiz->Dato->Peso+AreaPila(Pila) <= maxareaembolsado)|| 
 			(BandaT->nraiz->Dato->Peso > maxareaembolsado && Pila->size == 0)){
 				if ((tiempo - tiempoprocesamiento) == tiempoinicio){
 					tiempoinicio = tiempo;
-					Producto= extraernodocola(BandaT);
+					Producto= BandaT -> nraiz->Dato;
 					tiempoprocesamiento = procesamiento(Producto,&volumenbt);
-					if(Producto->Peso <= maxbolsa && tiempo > 0) push(Pila,Producto);
+					printf("--------TIEMPO PROCESAMIENTO: %d seg.----------",tiempoprocesamiento);
+					// EL PRIMER ELEMENTO SE PIERDE???
+					if(Producto->Peso <= maxbolsa && tiempo > 0) push(Pila,extraernodocola(BandaT));
 					else{
-						if(tiempo > 0) addelementlist(Bolsas, Producto);
+						if(tiempo > 0) addelementlist(Bolsas, extraernodocola(BandaT));
 					}
 				}
-			}else{
+			}else{;
 				tiempoinicio++;
 			}
 		}
@@ -156,6 +159,12 @@ void moveralabanda(ListaEnlazada *Carrito, ColaCarrito *BandaT, int *volumen){
 	// DESPUES VERIFICAR SI EL OBJETO SUPERA LA CAPACIDAD DE LA BANDA
 	while (Carrito->head->Dato->Peso + *volumen <= maxbt && Carrito->head != NULL){
 		struct Producto *objeto = removeelementlist(Carrito);
+		printf("%s",objeto->Nombre);
+		printf("\n");
+		printf("%d",objeto->Peso);
+		printf("\n");
+		printf("%d",objeto->Complejidad);
+		printf("\n");
 		insertarnodocola(objeto, BandaT);
 		*volumen += objeto->Peso;
 		if (Carrito->head == NULL){ //NUEVO

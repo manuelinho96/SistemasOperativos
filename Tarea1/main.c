@@ -96,7 +96,6 @@ void interactiva(ListaEnlazada *Carrito,ColaCarrito *BandaT, Stack *Pila, ListaE
 	printf("Lista de elementos embolsados: \n"); //PENEDIENTE
 	imprimirlistabolsa(Bolsas);
 	do{
-		imprimirproductos();
 		if (Carrito->head != NULL){ //NUEVO
 			moveralabanda(Carrito,BandaT,&volumenbt);
 		}
@@ -105,14 +104,18 @@ void interactiva(ListaEnlazada *Carrito,ColaCarrito *BandaT, Stack *Pila, ListaE
 			(BandaT->nraiz->Dato->Peso > maxareaembolsado && Pila->size == 0)){
 				if ((tiempo - tiempoprocesamiento) == tiempoinicio){
 					tiempoinicio = tiempo;
-					Producto= BandaT -> nraiz->Dato;
-					tiempoprocesamiento = procesamiento(Producto,&volumenbt);
-					printf("--------TIEMPO PROCESAMIENTO: %d seg.----------",tiempoprocesamiento);
-					// EL PRIMER ELEMENTO SE PIERDE???
-					if(Producto->Peso <= maxbolsa && tiempo > 0) push(Pila,extraernodocola(BandaT));
-					else{
-						if(tiempo > 0) addelementlist(Bolsas, extraernodocola(BandaT));
+					if(BandaT->nraiz->Dato->Peso <= maxbolsa && tiempo > 0){
+						volumenbt -= BandaT->nraiz->Dato->Peso;
+						push(Pila,extraernodocola(BandaT));
+					}else{
+						if(tiempo > 0){
+							volumenbt -= BandaT->nraiz->Dato->Peso;
+							addelementlist(Bolsas, extraernodocola(BandaT));
+						}
 					}
+					Producto= BandaT->nraiz->Dato;
+					tiempoprocesamiento = Producto->Complejidad / velocidadcajera;
+					printf("--------TIEMPO PROCESAMIENTO: %d seg.----------\n",tiempoprocesamiento);
 				}
 			}else{;
 				tiempoinicio++;
@@ -140,11 +143,11 @@ void interactiva(ListaEnlazada *Carrito,ColaCarrito *BandaT, Stack *Pila, ListaE
 			printf("----Tiempo transcurrido: %d s.----\n",tiempo);
 			printf("Lista de elementos en el carrito: ");
 			imprimirlista(Carrito);
-			printf("Lista de elementos en la banda transportadora: ");
+			printf("\nLista de elementos en la banda transportadora: ");
 			imprimircola(BandaT);
-			printf("Lista de elementos en el area de embolsado: ");
+			printf("\nLista de elementos en el area de embolsado: ");
 			show(Pila);
-			printf("Lista de elementos embolsados: ");
+			printf("\nLista de elementos embolsados: ");
 			imprimirlistabolsa(Bolsas);
 		}
 		fflush(stdin);
@@ -159,12 +162,6 @@ void moveralabanda(ListaEnlazada *Carrito, ColaCarrito *BandaT, int *volumen){
 	// DESPUES VERIFICAR SI EL OBJETO SUPERA LA CAPACIDAD DE LA BANDA
 	while (Carrito->head->Dato->Peso + *volumen <= maxbt && Carrito->head != NULL){
 		struct Producto *objeto = removeelementlist(Carrito);
-		printf("%s",objeto->Nombre);
-		printf("\n");
-		printf("%d",objeto->Peso);
-		printf("\n");
-		printf("%d",objeto->Complejidad);
-		printf("\n");
 		insertarnodocola(objeto, BandaT);
 		*volumen += objeto->Peso;
 		if (Carrito->head == NULL){ //NUEVO
@@ -177,19 +174,19 @@ void moveralabanda(ListaEnlazada *Carrito, ColaCarrito *BandaT, int *volumen){
 	}
 }
 
-int procesamiento(Producto *Producto,int *volumen){
-	*volumen -= Producto -> Peso;
-	return Producto->Complejidad / velocidadcajera; // FUNCION TECHO
-}
-
 void embolsar(Stack *Pila, ListaEnlazada *Bolsa){ //PASAR DE BANDA DE TRANSBORDADORA
 	int volumen = 0;
-	while (Pila->head != NULL){
-		if ( Pila->head->item->Peso + volumen <= maxbolsa ){
+	while (1){
+		if (Pila->head == NULL){
+			break;
+		}
+		else if (Pila->head->item->Peso + volumen <= maxbolsa){
 			struct Producto *objeto = pop(Pila);
 			addelementlist(Bolsa,objeto);
 			volumen += objeto->Peso;
-			imprimirlista(Bolsa);
+		}
+		else{
+			break;
 		}
 	}
 }

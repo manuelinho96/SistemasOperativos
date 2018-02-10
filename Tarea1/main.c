@@ -18,7 +18,7 @@ void automatica(ListaEnlazada *Carrito);
 
 void moveralabanda(ListaEnlazada *Carrito, ColaCarrito *BandaT, int *volumen);
 
-int procesamiento(ColaCarrito *BandaT,Stack *Pila,int *volumen);
+int procesamiento(Producto *Producto,int *volumen);
 
 void embolsar(Stack *Pila, ListaEnlazada *Bolsa);
 
@@ -99,15 +99,11 @@ void interactiva(ListaEnlazada *Carrito,ColaCarrito *BandaT, Stack *Pila, ListaE
 		(BandaT->nraiz->Dato->Peso > maxareaembolsado && Pila->size == 0)){
 			if ((tiempo - tiempoprocesamiento) == tiempoinicio){
 				tiempoinicio = tiempo;
-				if (tiempo>0){
-					struct Producto *Producto = extraernodocola(BandaT);
-					tiempoprocesamiento = procesamiento(BandaT,Pila,&volumenbt);
-					if(Producto->Peso <= maxbolsa) push(Pila,Producto);
-					else{
-						addelementlist(Bolsas, Producto);
-					}
-				}else{
-					tiempoprocesamiento = procesamiento(BandaT,Pila,&volumenbt);
+				struct Producto *Producto = extraernodocola(BandaT);
+				tiempoprocesamiento = procesamiento(Producto,&volumenbt);
+				if(Producto->Peso <= maxbolsa && tiempo > 0) push(Pila,Producto);
+				else{
+					if(tiempo > 0) addelementlist(Bolsas, Producto);
 				}
 			}
 		}else{
@@ -137,7 +133,8 @@ void interactiva(ListaEnlazada *Carrito,ColaCarrito *BandaT, Stack *Pila, ListaE
 		printf("\nPresiona Enter para continuar la simulacion: ");
 		getchar();
 		tiempo ++;
-	}while (BandaT->nraiz!=NULL || Pila->head!=NULL);
+	}while (1); // Establecer una nueva condicion de parada. En la primera iteracion puede
+	//pasar que la banda se quede vacia y la pila tambien.
 }
 
 void moveralabanda(ListaEnlazada *Carrito, ColaCarrito *BandaT, int *volumen){
@@ -153,10 +150,9 @@ void moveralabanda(ListaEnlazada *Carrito, ColaCarrito *BandaT, int *volumen){
 	}
 }
 
-int procesamiento(ColaCarrito *BandaT,Stack *Pila,int *volumen){
-	struct Producto *item = BandaT->nraiz->Dato;
-	*volumen -= item -> Peso;
-	return ceil(item->Complejidad / velocidadcajera); // FUNCION TECHO
+int procesamiento(Producto *Producto,int *volumen){
+	*volumen -= Producto -> Peso;
+	return Producto->Complejidad / velocidadcajera; // FUNCION TECHO
 }
 
 void embolsar(Stack *Pila, ListaEnlazada *Bolsa){ //PASAR DE BANDA DE TRANSBORDADORA

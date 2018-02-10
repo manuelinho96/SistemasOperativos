@@ -18,7 +18,7 @@ struct Producto **LeerProductos(){
             fgets(caracteres,1000,archivo);
             i++;
         }
-        cantidaddeproductos = i-1;
+        cantidaddeproductos = i;
         Productos = malloc(i*sizeof(Producto));
         rewind(archivo);
         i = 0;
@@ -44,7 +44,7 @@ struct Producto **LeerProductos(){
 }
 
 void imprimirproductos(){
-        for(int j = 0; j<=cantidaddeproductos; j++){
+        for(int j = 0; j<cantidaddeproductos; j++){
             printf("Nombre: %s", Productos[j]->Nombre);
             printf(" Peso: %d", Productos[j]->Peso);
             printf(" Complejidad: %d\n", Productos[j]->Complejidad);

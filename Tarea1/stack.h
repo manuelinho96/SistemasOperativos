@@ -90,7 +90,7 @@ void show(Stack *s){
 		if(i == (s->size)-1){
 			printf("%s\n", actual->item->Nombre);
 		}else{
-			printf("%s -", actual->item->Nombre);
+			printf("%s - ", actual->item->Nombre);
 			actual = actual->next;
 		}
 	}

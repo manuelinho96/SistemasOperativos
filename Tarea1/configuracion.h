@@ -46,12 +46,12 @@ void configuracion(){
             printf("Ingrese una opcion: ");
             scanf("%d", &opcion);
             if ( opcion == 1 ){
-                printf("1. Iterativa\n");
+                printf("1. Interactiva\n");
                 printf("2. Automatica\n");
                 printf("Ingrese la modalidad: ");
                 scanf("%d", &opcion);
                 if ( opcion == 1){
-                    modalidad = "Iterativa";
+                    modalidad = "Interactiva";
                 }
                 else if (opcion == 2){
                     modalidad = "Automatica";

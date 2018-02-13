@@ -12,17 +12,13 @@
 
 void menu();
 
-void interactiva(ListaEnlazada *Carrito,ColaCarrito *BandaT, Stack *Pila, ListaEnlazada *Bolsas);
-
-void automatica(ListaEnlazada *Carrito);
+void simulacion(ListaEnlazada *Carrito,ColaCarrito *BandaT, Stack *Pila, ListaEnlazada *Bolsas,const char *modalidad);
 
 void moveralabanda(ListaEnlazada *Carrito, ColaCarrito *BandaT, int *volumen);
 
 int procesamiento(Producto *Producto,int *volumen);
 
 void embolsar(Stack *Pila, ListaEnlazada *Bolsa);
-
-
 
 int main (){
     int opcion;
@@ -48,10 +44,7 @@ int main (){
                 cantidaddecarritos = rand();
                 Productos = LeerProductos();
                 generarcarrito(Carrito);
-                if ( modalidad == "interactiva" ) interactiva(Carrito,BandaT,Pila, Bolsas);
-                else{
-                    automatica(Carrito);
-                } 
+                simulacion(Carrito,BandaT,Pila,Bolsas,modalidad);
             }
             else if ( opcion == 2 ){
                 configuracion();
@@ -73,7 +66,7 @@ void menu(){
     printf("3. Salir del programa\n");
 }
 
-void interactiva(ListaEnlazada *Carrito,ColaCarrito *BandaT, Stack *Pila, ListaEnlazada *Bolsas){
+void simulacion(ListaEnlazada *Carrito,ColaCarrito *BandaT, Stack *Pila, ListaEnlazada *Bolsas,const char *modalidad){
 	int tiempo = 0;
 	int tiempoprocesamiento = 0;
 	int tiempoinicio = 0;
@@ -83,18 +76,19 @@ void interactiva(ListaEnlazada *Carrito,ColaCarrito *BandaT, Stack *Pila, ListaE
 	struct Producto *Producto;
 	Bolsa = malloc(sizeof(ListaEnlazada));
 	Inicialize(Bolsa);
-	printf("Presiona Enter para iniciar la simulacion");
+	printf("Presiona Enter para iniciar la simulacion\n");
 	fflush(stdin);
 	getchar();
-	printf("----Tiempo transcurrido: %d s.----\n",tiempo);
-	printf("Lista de elementos en el carrito: ");
-	imprimirlista(Carrito);
-	printf("Lista de elementos en la banda transportadora: ");
-	imprimircola(BandaT);
-	printf("Lista de elementos en el area de embolsado: ");
-	show(Pila);
-	printf("Lista de elementos embolsados: \n"); //PENEDIENTE
-	imprimirlistabolsa(Bolsas);
+	if (modalidad == "interactiva"){
+		printf("Lista de elementos en el carrito: ");
+		imprimirlista(Carrito);
+		printf("Lista de elementos en la banda transportadora: ");
+		imprimircola(BandaT);
+		printf("Lista de elementos en el area de embolsado: ");
+		show(Pila);
+		printf("Lista de elementos embolsados: \n"); //PENEDIENTE
+		imprimirlistabolsa(Bolsas);
+	}
 	do{
 		if (Carrito->head != NULL){ //NUEVO
 			moveralabanda(Carrito,BandaT,&volumenbt);
@@ -123,7 +117,6 @@ void interactiva(ListaEnlazada *Carrito,ColaCarrito *BandaT, Stack *Pila, ListaE
 			}
 		}
 		if (Pila->head!=NULL && tiempo % velocidadembolsador == 0){
-			show(Pila);
 			embolsar(Pila,Bolsa);
 			ListaEnlazada *BolsaAuxiliar;
 			BolsaAuxiliar = malloc(sizeof(Bolsa));
@@ -133,7 +126,7 @@ void interactiva(ListaEnlazada *Carrito,ColaCarrito *BandaT, Stack *Pila, ListaE
 			Bolsa = malloc(sizeof(ListaEnlazada));
 			Inicialize(Bolsa);
 		}
-		if(tiempo>0){
+		if(tiempo>0 && modalidad == "interactiva"){
 			printf("Lista de elementos en el carrito: ");
 			imprimirlista(Carrito);
 			printf("\nLista de elementos en la banda transportadora: ");
@@ -181,7 +174,4 @@ void embolsar(Stack *Pila, ListaEnlazada *Bolsa){ //PASAR DE BANDA DE TRANSBORDA
 			break;
 		}
 	}
-}
-
-void automatica(ListaEnlazada *Carrito){
 }

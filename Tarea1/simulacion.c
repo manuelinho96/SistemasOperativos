@@ -19,13 +19,13 @@ struct Producto **LeerProductos(){
             i++;
         }
         cantidaddeproductos = i;
-        Productos = malloc(i*sizeof(Producto));
+        if ((Productos = malloc(i*sizeof(Producto)))==NULL) return NULL;
         rewind(archivo);
         i = 0;
         while (feof(archivo) == 0)
  	    {
             fgets(caracteres,1000,archivo);
-            Product = malloc(sizeof(Producto));
+            if ((Product = malloc(sizeof(Producto)))==NULL) return NULL;
             Productos[i] = Product;
             token = strtok(caracteres,"\t");
             x = 0;
@@ -52,7 +52,7 @@ void imprimirproductos(){
 }
 
 void generarcarrito(ListaEnlazada *Carrito){
-    int productoscarrito = 0;
+    int productoscarrito = rand() % maxproductscarrito;
     int producto;
     while(productoscarrito == 0){
         productoscarrito = rand() % maxproductscarrito;

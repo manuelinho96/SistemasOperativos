@@ -20,8 +20,22 @@ int procesamiento(Producto *Producto,int *volumen);
 
 void embolsar(Stack *Pila, ListaEnlazada *Bolsa);
 
-int main (){
-    int opcion;
+int main (int argc, char *argv[]){
+	if (argc <= 1){
+		printf("No se introdujo un nombre de archivo de inventario, error.\n");
+		return 1;
+	}
+	else if(argc == 2){
+		Productos = LeerProductos(argv[1]);
+		if(Productos == NULL){
+			printf("Error al abrir el archivo de entrada\n");
+			return 1;
+		}
+	}else{
+		printf("Se introdujo mas parametros de los permitidos\n");
+		return 1;
+	}
+    int opcion = 0;
     while(1){
         menu();
         while(1){
@@ -30,6 +44,7 @@ int main (){
             if (opcion == 1){
             	int tiempoclientes[carritoEnCola];
             	int tiempototal = 0;
+				int numproductscarrito[carritoEnCola];
             	for(int i = 0; i < carritoEnCola; i++){
 	                srand(time(NULL));
 	                ListaEnlazada *Carrito;
@@ -44,20 +59,20 @@ int main (){
 	                iniciarcola(BandaT);
 	                initialization(Pila);
 					Inicialize(Bolsas);
-	                Productos = LeerProductos();
-	                generarcarrito(Carrito);
+	                numproductscarrito[i] = generarcarrito(Carrito);
 	                simulacion(Carrito,BandaT,Pila,Bolsas,modalidad,i,tiempoclientes);
 	                free(Carrito);
 	                free(BandaT);
 	                free(Pila);
 	                removelist(Bolsas);
-	                free(Bolsas);
+	                free(Bolsas); 
             	}
             	for (int j = 0;j<carritoEnCola;j++){
-            		printf("Tiempo del cliente %d: %d\n",j,tiempoclientes[j]);
+            		printf("Tiempo del cliente %d: %d\n",j+1,tiempoclientes[j]);
             		tiempototal += tiempoclientes[j];
             	}
             	printf("TIEMPO TOTAL: %d\n",tiempototal);
+				writelogfile(carritoEnCola, numproductscarrito, tiempoclientes, tiempototal, argv[1]);
             }
             else if (opcion == 2){
                 configuracion();

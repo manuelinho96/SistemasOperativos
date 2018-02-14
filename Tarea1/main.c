@@ -12,11 +12,7 @@
 
 void menu();
 
-<<<<<<< HEAD
-void simulacion(ListaEnlazada *Carrito,ColaCarrito *BandaT, Stack *Pila, ListaEnlazada *Bolsas,const char *modalidad, int numerocarritos);
-=======
 void simulacion(ListaEnlazada *Carrito,ColaCarrito *BandaT, Stack *Pila, ListaEnlazada *Bolsas,const char *modalidad,int numerocarrito,int *numerocliente);
->>>>>>> TiendaDavid
 
 void moveralabanda(ListaEnlazada *Carrito, ColaCarrito *BandaT, int *volumen);
 
@@ -45,43 +41,24 @@ int main (int argc, char *argv[]){
         while(1){
             printf("Ingrese una opcion: ");
             scanf("%d", &opcion);
-<<<<<<< HEAD
-            if ( opcion == 1 ){
-            	printf("entre");
-            	for(int i = 0; i < carritoEnCola; i++){   
-=======
             if (opcion == 1){
             	int tiempoclientes[carritoEnCola];
             	int tiempototal = 0;
 				int numproductscarrito[carritoEnCola];
             	for(int i = 0; i < carritoEnCola; i++){
->>>>>>> TiendaDavid
 	                srand(time(NULL));
 	                ListaEnlazada *Carrito;
 	                ColaCarrito *BandaT;
 	                Stack *Pila;
 					ListaEnlazada *Bolsas;
-<<<<<<< HEAD
-	                Carrito = malloc(sizeof(ListaEnlazada));
-	                BandaT = malloc(sizeof(ColaCarrito));
-	                Pila = malloc(sizeof(Stack));
-					Bolsas = malloc(sizeof(ListaEnlazada));
-=======
 	                if ((Carrito = malloc(sizeof(ListaEnlazada)))==NULL) return -1;
 	                if ((BandaT = malloc(sizeof(ColaCarrito)))==NULL) return -1;
 	                if ((Pila = malloc(sizeof(Stack)))==NULL) return -1;
 					if ((Bolsas = malloc(sizeof(ListaEnlazada)))==NULL) return -1;
->>>>>>> TiendaDavid
 	                Inicialize(Carrito);
 	                iniciarcola(BandaT);
 	                initialization(Pila);
 					Inicialize(Bolsas);
-<<<<<<< HEAD
-	                Productos = LeerProductos();
-	                generarcarrito(Carrito);
-	                simulacion(Carrito,BandaT,Pila,Bolsas,modalidad, 1);
-	            }
-=======
 	                numproductscarrito[i] = generarcarrito(Carrito);
 	                simulacion(Carrito,BandaT,Pila,Bolsas,modalidad,i,tiempoclientes);
 	                free(Carrito);
@@ -96,7 +73,6 @@ int main (int argc, char *argv[]){
             	}
             	printf("TIEMPO TOTAL: %d\n",tiempototal);
 				writelogfile(carritoEnCola, numproductscarrito, tiempoclientes, tiempototal, argv[1]);
->>>>>>> TiendaDavid
             }
             else if (opcion == 2){
                 configuracion();
@@ -118,11 +94,7 @@ void menu(){
     printf("3. Salir del programa\n");
 }
 
-<<<<<<< HEAD
-void simulacion(ListaEnlazada *Carrito,ColaCarrito *BandaT, Stack *Pila, ListaEnlazada *Bolsas,const char *modalidad, int numerocarritos){
-=======
 void simulacion(ListaEnlazada *Carrito,ColaCarrito *BandaT, Stack *Pila, ListaEnlazada *Bolsas,const char *modalidad,int numerocarrito,int *tiempoclientes){
->>>>>>> TiendaDavid
 	int tiempo = 0;
 	int tiempoprocesamiento = 0;
 	int tiempoinicio = 0;

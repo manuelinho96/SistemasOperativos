@@ -73,7 +73,7 @@ void writelogfile(int cantidaddecarritos, int *numproductscarrito, int *tiempocl
     }else{
         fprintf(logfile, "Nombre del archivo de entrada: %s\n", infile);
         fprintf(logfile, "Cantidad de carritos: %d\n", cantidaddecarritos);
-        fprintf(logfile, "Numero de productos en cada carrito: ");
+        fprintf(logfile, "Numero de productos en cada carrito: \n");
         for(int i = 0; i<cantidaddecarritos; i++){
             fprintf(logfile, "Carrito %d: %d\n", i+1, numproductscarrito[i]);
         }

@@ -1,8 +1,8 @@
 Nombre del archivo de entrada: entrada1.txt
 Cantidad de carritos: 3
-Numero de productos en cada carrito: Carrito 1: 7
-Carrito 2: 29
-Carrito 3: 8
+Numero de productos en cada carrito: Carrito 1: 17
+Carrito 2: 19
+Carrito 3: 19
 Capacidad de la banda transportadora: 200
 Velocidad de la cajera: 1.000000
 Velocidad del embolsador: 4
@@ -10,7 +10,7 @@ Tiempo de facturacion: 130
 Capacidad del area de embolsado: 150
 Capacidad de una bolsa: 120
 Tiempo en procesar cada cliente: 
-Cliente 1: 155
-Cliente 2: 231
-Cliente 3: 159
-Tiempo total: 545
+Cliente 1: 173
+Cliente 2: 192
+Cliente 3: 192
+Tiempo total: 557

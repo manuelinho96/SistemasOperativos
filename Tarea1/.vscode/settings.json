@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "main.h": "c",
+        "configuracion.h": "c",
+        "simulacion.h": "c",
+        "listaenlazada.h": "c"
+    }
+}

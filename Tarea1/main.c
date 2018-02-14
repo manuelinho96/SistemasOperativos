@@ -1,24 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include "producto.h"
-#include "cola.h"
-#include "stack.h"
-#include "ListaEnlazada.c"
-#include "configuracion.h"
-#include "simulacion.c"
-#include <time.h>
-#include <math.h>
-
-void menu();
-
-void simulacion(ListaEnlazada *Carrito,ColaCarrito *BandaT, Stack *Pila, ListaEnlazada *Bolsas,const char *modalidad,int numerocarrito,int *numerocliente);
-
-void moveralabanda(ListaEnlazada *Carrito, ColaCarrito *BandaT, int *volumen);
-
-int procesamiento(Producto *Producto,int *volumen);
-
-void embolsar(Stack *Pila, ListaEnlazada *Bolsa);
+#include "main.h"
 
 int main (int argc, char *argv[]){
 	if (argc <= 1){
@@ -130,12 +110,12 @@ void simulacion(ListaEnlazada *Carrito,ColaCarrito *BandaT, Stack *Pila, ListaEn
 					}else{
 						if(tiempo > 0){
 							volumenbt -= BandaT->nraiz->Dato->Peso;
-							anadirbolsa2(Bolsas, extraernodocola(BandaT));
+							anadirsinbolsa(Bolsas, extraernodocola(BandaT));
 						}
 					}
 					if (BandaT->nraiz != NULL){
 						Producto = BandaT->nraiz->Dato;
-						tiempoprocesamiento = Producto->Complejidad / velocidadcajera;
+						tiempoprocesamiento = ceil(Producto->Complejidad / velocidadcajera);
 					}
 				}
 			}else{;
@@ -146,10 +126,7 @@ void simulacion(ListaEnlazada *Carrito,ColaCarrito *BandaT, Stack *Pila, ListaEn
 			if ((Bolsa = malloc(sizeof(ListaEnlazada)))==NULL) return;
 			Inicialize(Bolsa);
 			embolsar(Pila,Bolsa);
-			ListaEnlazada *BolsaAuxiliar;
-			if ((BolsaAuxiliar = malloc(sizeof(Bolsa)))==NULL) return;
-			memcpy(BolsaAuxiliar, Bolsa, sizeof(Bolsa));
-			anadirbolsa(Bolsas, BolsaAuxiliar);
+			anadirbolsa(Bolsas, Bolsa);
 			free(Bolsa);
 		}
 		if(tiempo>0 && modalidad == "Interactiva"){
@@ -168,6 +145,7 @@ void simulacion(ListaEnlazada *Carrito,ColaCarrito *BandaT, Stack *Pila, ListaEn
 		tiempo ++;
 	}while (Carrito->head != NULL || BandaT->nraiz != NULL || Pila->head !=NULL);
 	tiempoclientes[numerocarrito] = tiempo + tiempofacturacion;
+	removelist(Bolsas);
 }
 
 void moveralabanda(ListaEnlazada *Carrito, ColaCarrito *BandaT, int *volumen){

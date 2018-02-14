@@ -1,29 +1,17 @@
-struct NodoLista
-{
-    struct ListaEnlazada *Bolsa;
-    struct Producto * Dato;
-    struct NodoLista * next;
-    int esBolsa;
-};
-
-typedef struct ListaEnlazada
-{
-    struct NodoLista * head;
-}ListaEnlazada;
+#include "ListaEnlazada.h"
 
 void Inicialize(struct ListaEnlazada * Lista)
 {
     Lista->head = NULL;
 };
 
-
-
 int anadirbolsa(struct ListaEnlazada * Lista, struct ListaEnlazada *Bolsa){
     struct NodoLista *nodo;
     struct NodoLista *actual = Lista->head;
     struct NodoLista *anterior = NULL;
     if ((nodo = malloc(sizeof(struct NodoLista)))==NULL) return -1;
-    nodo->Bolsa = Bolsa;
+    if ((nodo-> Bolsa = malloc(sizeof(Bolsa)))==NULL) return -1;
+    memcpy(nodo-> Bolsa, Bolsa, sizeof(Bolsa));
     nodo->esBolsa = 1;
     nodo->next = NULL;
     if(Lista->head == NULL){
@@ -40,38 +28,13 @@ int anadirbolsa(struct ListaEnlazada * Lista, struct ListaEnlazada *Bolsa){
     }
 }
 
-int anadirbolsa2(struct ListaEnlazada * Lista, struct Producto *Dato){
+int anadirsinbolsa(struct ListaEnlazada * Lista, struct Producto *Dato){
     struct NodoLista *nodo;
     struct NodoLista *actual = Lista->head;
     struct NodoLista *anterior = NULL;
     nodo = malloc(sizeof(struct NodoLista));
     nodo->Dato = Dato;
-    nodo->esBolsa = 0   ;
-    nodo->next = NULL;
-    if(Lista->head == NULL){
-        Lista->head = nodo;
-        return 0;
-    }
-    else{
-        while(actual != NULL){
-            anterior = actual;
-            actual = actual->next;
-        }
-        anterior->next = nodo;
-        return 0;
-    }
-}
-
-
-int addelementlist(struct ListaEnlazada * Lista, struct Producto * Dato1)
-{
-
-    struct NodoLista *nodo;
-    struct NodoLista *actual = Lista->head;
-    struct NodoLista *anterior = NULL;
-    nodo = malloc(sizeof(struct NodoLista));
-    nodo->Dato = Dato;
-    nodo->esBolsa = 0;
+    nodo->esBolsa = 0 ;
     nodo->next = NULL;
     if(Lista->head == NULL){
         Lista->head = nodo;
@@ -139,9 +102,11 @@ int removelist(struct ListaEnlazada * Lista){
     while(actual != NULL){
         borrado = actual;
         actual = actual -> next;
+        if(borrado->esBolsa == 1) free(borrado->Bolsa);
         free(borrado);
     }
     Lista->head = NULL;
+    return 0;
 }
 
 
@@ -186,5 +151,3 @@ void imprimirlistabolsa(struct ListaEnlazada *lista){
     }
     printf("\n");
 }
-
-

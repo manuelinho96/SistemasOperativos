@@ -1,3 +1,5 @@
+#include "simulacion.h"
+
 struct Producto **LeerProductos(const char *Nombre){
 
     FILE *archivo;

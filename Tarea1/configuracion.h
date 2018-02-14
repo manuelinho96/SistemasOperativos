@@ -1,4 +1,4 @@
-const char *modalidad = "interactiva";
+const char *modalidad = "Interactiva";
 int carritoEnCola = 3;
 int maxproductscarrito = 30;
 int maxbt = 200;

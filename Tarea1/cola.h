@@ -24,7 +24,7 @@ int colavacia(ColaCarrito *cola){
 
 void insertarnodocola(struct Producto *producto, ColaCarrito *cola){
     struct nodocola *nuevo;
-    nuevo = malloc(sizeof(struct nodocola));
+    if ((nuevo = malloc(sizeof(struct nodocola)))==NULL) return;
     nuevo->Dato = producto;
     nuevo -> siguiente = NULL;  
     if (colavacia(cola)){

@@ -1,4 +1,4 @@
-struct Producto **LeerProductos(){
+struct Producto **LeerProductos(const char *Nombre){
 
     FILE *archivo;
     char caracteres[100];
@@ -9,7 +9,7 @@ struct Producto **LeerProductos(){
     Producto **Productos;
     char *token;
 
- 	archivo = fopen("entrada1.txt","r");
+ 	archivo = fopen(Nombre,"r");
  	
  	if (archivo == NULL)
  		exit(1);
@@ -19,13 +19,13 @@ struct Producto **LeerProductos(){
             i++;
         }
         cantidaddeproductos = i;
-        Productos = malloc(i*sizeof(Producto));
+        if ((Productos = malloc(i*sizeof(Producto)))==NULL) return NULL;
         rewind(archivo);
         i = 0;
         while (feof(archivo) == 0)
  	    {
             fgets(caracteres,1000,archivo);
-            Product = malloc(sizeof(Producto));
+            if ((Product = malloc(sizeof(Producto)))==NULL) return NULL;
             Productos[i] = Product;
             token = strtok(caracteres,"\t");
             x = 0;
@@ -51,8 +51,8 @@ void imprimirproductos(){
     }
 }
 
-void generarcarrito(ListaEnlazada *Carrito){
-    int productoscarrito;
+int generarcarrito(ListaEnlazada *Carrito){
+    int productoscarrito = rand() % maxproductscarrito;
     int producto;
     while(productoscarrito == 0){
         productoscarrito = rand() % maxproductscarrito;
@@ -60,5 +60,34 @@ void generarcarrito(ListaEnlazada *Carrito){
     for (int j = 0; j < productoscarrito; j++){
         producto = rand() % cantidaddeproductos;
         addelementlist(Carrito, Productos[producto]);
+    }
+    return productoscarrito;
+}
+
+void writelogfile(int cantidaddecarritos, int *numproductscarrito, int *tiempoclientes, int tiempototal, const char *infile){
+    FILE *logfile;
+    logfile = fopen("simulacion.log", "w");
+    if (fopen == NULL){
+        printf("Error al escribir el log\n");
+        exit(1);
+    }else{
+        fprintf(logfile, "Nombre del archivo de entrada: %s\n", infile);
+        fprintf(logfile, "Cantidad de carritos: %d\n", cantidaddecarritos);
+        fprintf(logfile, "Numero de productos en cada carrito: \n");
+        for(int i = 0; i<cantidaddecarritos; i++){
+            fprintf(logfile, "Carrito %d: %d\n", i+1, numproductscarrito[i]);
+        }
+        fprintf(logfile, "Capacidad de la banda transportadora: %d\n", maxbt);
+        fprintf(logfile, "Velocidad de la cajera: %f\n", velocidadcajera);
+        fprintf(logfile, "Velocidad del embolsador: %d\n", velocidadembolsador);
+        fprintf(logfile, "Tiempo de facturacion: %d\n", tiempofacturacion);
+        fprintf(logfile, "Capacidad del area de embolsado: %d\n", maxareaembolsado);
+        fprintf(logfile, "Capacidad de una bolsa: %d\n", maxbolsa);
+        fprintf(logfile, "Tiempo en procesar cada cliente: \n");
+        for(int i = 0; i<cantidaddecarritos; i++){
+            fprintf(logfile, "Cliente %d: %d\n", i+1, tiempoclientes[i]);
+        }
+        fprintf(logfile, "Tiempo total: %d", tiempototal);
+        fclose(logfile);
     }
 }

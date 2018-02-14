@@ -22,7 +22,7 @@ int anadirbolsa(struct ListaEnlazada * Lista, struct ListaEnlazada *Bolsa){
     struct NodoLista *nodo;
     struct NodoLista *actual = Lista->head;
     struct NodoLista *anterior = NULL;
-    nodo = malloc(sizeof(struct NodoLista));
+    if ((nodo = malloc(sizeof(struct NodoLista)))==NULL) return -1;
     nodo->Bolsa = Bolsa;
     nodo->esBolsa = 1;
     nodo->next = NULL;
@@ -41,6 +41,7 @@ int anadirbolsa(struct ListaEnlazada * Lista, struct ListaEnlazada *Bolsa){
 }
 
 int anadirbolsa2(struct ListaEnlazada * Lista, struct Producto *Dato){
+<<<<<<< HEAD
     struct NodoLista *nodo;
     struct NodoLista *actual = Lista->head;
     struct NodoLista *anterior = NULL;
@@ -66,10 +67,34 @@ int anadirbolsa2(struct ListaEnlazada * Lista, struct Producto *Dato){
 int addelementlist(struct ListaEnlazada * Lista, struct Producto * Dato1)
 {
 
+=======
+>>>>>>> TiendaDavid
     struct NodoLista *nodo;
     struct NodoLista *actual = Lista->head;
     struct NodoLista *anterior = NULL;
     nodo = malloc(sizeof(struct NodoLista));
+    nodo->Dato = Dato;
+    nodo->esBolsa = 0;
+    nodo->next = NULL;
+    if(Lista->head == NULL){
+        Lista->head = nodo;
+        return 0;
+    }
+    else{
+        while(actual != NULL){
+            anterior = actual;
+            actual = actual->next;
+        }
+        anterior->next = nodo;
+        return 0;
+    }
+}
+
+int addelementlist(struct ListaEnlazada * Lista, struct Producto * Dato1){
+    struct NodoLista *nodo;
+    struct NodoLista *actual = Lista->head;
+    struct NodoLista *anterior = NULL;
+    if ((nodo = malloc(sizeof(struct NodoLista)))==NULL) return -1;
     nodo->Dato = Dato1;
     nodo->esBolsa = 0;
     if(Lista->head == NULL){
@@ -131,12 +156,15 @@ void imprimirlista(struct ListaEnlazada *lista){
             actual = actual->next;
         }
         else{
+<<<<<<< HEAD
             printf("%s", actual->Dato->Nombre);
             printf("\n");
+=======
+            printf("%s\n", actual->Dato->Nombre);
+>>>>>>> TiendaDavid
             actual = actual->next;
         }
     }
-    printf("\n");
 }
 
 void imprimirlistabolsa(struct ListaEnlazada *lista){
@@ -144,24 +172,28 @@ void imprimirlistabolsa(struct ListaEnlazada *lista){
     struct NodoLista *actual = lista->head;
     while(actual != NULL){
         if(actual->next != NULL && actual->esBolsa == 1){
-            printf("Bolsa numero: %d ", i);
+            printf("Bolsa %d: ", i);
             imprimirlista(actual->Bolsa);
             actual = actual->next;
             i++;
         }
         else if (actual->next != NULL && actual->esBolsa != 1) {
+<<<<<<< HEAD
             printf("%s \n", actual->Dato->Nombre);
             printf("\n");
+=======
+            printf("Sin Bolsa: %s\n", actual->Dato->Nombre);
+>>>>>>> TiendaDavid
             actual = actual->next;
         }
         else if(actual->next == NULL && actual->esBolsa == 1){
-            printf("Bolsa numero: %d ", i);
+            printf("Bolsa %d: ", i);
             imprimirlista(actual->Bolsa);
             actual = actual->next;
             i++;
         }
         else{
-            printf("%s", actual->Dato->Nombre);
+            printf("Sin Bolsa: %s", actual->Dato->Nombre);
             actual = actual->next;
         }
     }

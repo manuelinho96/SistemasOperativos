@@ -1,3 +1,6 @@
+main.o: main.c cola.o lista.o configuracion.o simulacion.o pila.o
+	gcc -g main.c cola.o ListaEnlazada.o configuracion.o simulacion.o stack.o -o $@	
+
 cola.o: cola.c producto.h
 	gcc -c cola.c
 

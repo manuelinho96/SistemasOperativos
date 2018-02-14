@@ -40,6 +40,28 @@ int anadirbolsa(struct ListaEnlazada * Lista, struct ListaEnlazada *Bolsa){
     }
 }
 
+int anadirbolsa2(struct ListaEnlazada * Lista, struct Producto *Dato){
+    struct NodoLista *nodo;
+    struct NodoLista *actual = Lista->head;
+    struct NodoLista *anterior = NULL;
+    nodo = malloc(sizeof(struct NodoLista));
+    nodo->Dato = Dato;
+    nodo->esBolsa = 0   ;
+    nodo->next = NULL;
+    if(Lista->head == NULL){
+        Lista->head = nodo;
+        return 0;
+    }
+    else{
+        while(actual != NULL){
+            anterior = actual;
+            actual = actual->next;
+        }
+        anterior->next = nodo;
+        return 0;
+    }
+}
+
 
 int addelementlist(struct ListaEnlazada * Lista, struct Producto * Dato1)
 {
@@ -110,6 +132,7 @@ void imprimirlista(struct ListaEnlazada *lista){
         }
         else{
             printf("%s", actual->Dato->Nombre);
+            printf("\n");
             actual = actual->next;
         }
     }
@@ -127,7 +150,8 @@ void imprimirlistabolsa(struct ListaEnlazada *lista){
             i++;
         }
         else if (actual->next != NULL && actual->esBolsa != 1) {
-            printf("-%s", actual->Dato->Nombre);
+            printf("%s \n", actual->Dato->Nombre);
+            printf("\n");
             actual = actual->next;
         }
         else if(actual->next == NULL && actual->esBolsa == 1){

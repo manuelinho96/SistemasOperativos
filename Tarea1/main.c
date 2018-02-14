@@ -12,7 +12,7 @@
 
 void menu();
 
-void simulacion(ListaEnlazada *Carrito,ColaCarrito *BandaT, Stack *Pila, ListaEnlazada *Bolsas,const char *modalidad, int numercarritos);
+void simulacion(ListaEnlazada *Carrito,ColaCarrito *BandaT, Stack *Pila, ListaEnlazada *Bolsas,const char *modalidad, int numerocarritos);
 
 void moveralabanda(ListaEnlazada *Carrito, ColaCarrito *BandaT, int *volumen);
 
@@ -45,7 +45,7 @@ int main (){
 					Inicialize(Bolsas);
 	                Productos = LeerProductos();
 	                generarcarrito(Carrito);
-	                simulacion(Carrito,BandaT,Pila,Bolsas,modalidad, carritoEnCola);
+	                simulacion(Carrito,BandaT,Pila,Bolsas,modalidad, 1);
 	            }
             }
             else if ( opcion == 2 ){
@@ -68,7 +68,7 @@ void menu(){
     printf("3. Salir del programa\n");
 }
 
-void simulacion(ListaEnlazada *Carrito,ColaCarrito *BandaT, Stack *Pila, ListaEnlazada *Bolsas,const char *modalidad, int numercarritos){
+void simulacion(ListaEnlazada *Carrito,ColaCarrito *BandaT, Stack *Pila, ListaEnlazada *Bolsas,const char *modalidad, int numerocarritos){
 	int tiempo = 0;
 	int tiempoprocesamiento = 0;
 	int tiempoinicio = 0;
@@ -106,7 +106,7 @@ void simulacion(ListaEnlazada *Carrito,ColaCarrito *BandaT, Stack *Pila, ListaEn
 					}else{
 						if(tiempo > 0){
 							volumenbt -= BandaT->nraiz->Dato->Peso;
-							addelementlist(Bolsas, extraernodocola(BandaT));
+							anadirbolsa2(Bolsas, extraernodocola(BandaT));
 						}
 					}
 					if (BandaT->nraiz != NULL){

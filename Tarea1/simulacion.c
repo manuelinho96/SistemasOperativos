@@ -52,7 +52,7 @@ void imprimirproductos(){
 }
 
 void generarcarrito(ListaEnlazada *Carrito){
-    int productoscarrito;
+    int productoscarrito = 0;
     int producto;
     while(productoscarrito == 0){
         productoscarrito = rand() % maxproductscarrito;

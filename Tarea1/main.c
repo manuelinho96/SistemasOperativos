@@ -12,7 +12,7 @@
 
 void menu();
 
-void simulacion(ListaEnlazada *Carrito,ColaCarrito *BandaT, Stack *Pila, ListaEnlazada *Bolsas,const char *modalidad);
+void simulacion(ListaEnlazada *Carrito,ColaCarrito *BandaT, Stack *Pila, ListaEnlazada *Bolsas,const char *modalidad,int numerocarrito,int *numerocliente[]);
 
 void moveralabanda(ListaEnlazada *Carrito, ColaCarrito *BandaT, int *volumen);
 
@@ -28,23 +28,34 @@ int main (){
             printf("Ingrese una opcion: ");
             scanf("%d", &opcion);
             if ( opcion == 1 ){
-                srand(time(NULL));
-                ListaEnlazada *Carrito;
-                ColaCarrito *BandaT;
-                Stack *Pila;
-				ListaEnlazada *Bolsas;
-                Carrito = malloc(sizeof(ListaEnlazada));
-                BandaT = malloc(sizeof(ColaCarrito));
-                Pila = malloc(sizeof(Stack));
-				Bolsas = malloc(sizeof(ListaEnlazada));
-                Inicialize(Carrito);
-                iniciarcola(BandaT);
-                initialization(Pila);
-				Inicialize(Bolsas);
-                cantidaddecarritos = rand();
-                Productos = LeerProductos();
-                generarcarrito(Carrito);
-                simulacion(Carrito,BandaT,Pila,Bolsas,modalidad);
+            	int *tiempoclientes[carritoEnCola];
+            	int tiempototal = 0;
+            	for(int i = 0; i < carritoEnCola; i++){
+	                srand(time(NULL));
+	                ListaEnlazada *Carrito;
+	                ColaCarrito *BandaT;
+	                Stack *Pila;
+					ListaEnlazada *Bolsas;
+	                Carrito = malloc(sizeof(ListaEnlazada));
+	                BandaT = malloc(sizeof(ColaCarrito));
+	                Pila = malloc(sizeof(Stack));
+					Bolsas = malloc(sizeof(ListaEnlazada));
+	                Inicialize(Carrito);
+	                iniciarcola(BandaT);
+	                initialization(Pila);
+					Inicialize(Bolsas);
+	                Productos = LeerProductos();
+	                generarcarrito(Carrito);
+	                simulacion(Carrito,BandaT,Pila,Bolsas,modalidad,i,tiempoclientes);
+            	}
+            	for (int j = 0;j<carritoEnCola;j++){
+            		printf("Tiempo del cliente %d: %d\n",j,tiempoclientes[j]);
+            		printf("%d\n",tiempoclientes[j]);
+            		printf("%d\n",tiempototal);
+            		tiempototal += tiempoclientes[j];
+            		printf("%d\n",tiempototal);
+            	}
+            	printf("TIEMPO TOTAL: %d\n",tiempototal);
             }
             else if ( opcion == 2 ){
                 configuracion();
@@ -66,7 +77,7 @@ void menu(){
     printf("3. Salir del programa\n");
 }
 
-void simulacion(ListaEnlazada *Carrito,ColaCarrito *BandaT, Stack *Pila, ListaEnlazada *Bolsas,const char *modalidad){
+void simulacion(ListaEnlazada *Carrito,ColaCarrito *BandaT, Stack *Pila, ListaEnlazada *Bolsas,const char *modalidad,int numerocarrito,int *tiempoclientes[]){
 	int tiempo = 0;
 	int tiempoprocesamiento = 0;
 	int tiempoinicio = 0;
@@ -79,7 +90,7 @@ void simulacion(ListaEnlazada *Carrito,ColaCarrito *BandaT, Stack *Pila, ListaEn
 	printf("Presiona Enter para iniciar la simulacion\n");
 	fflush(stdin);
 	getchar();
-	if (modalidad == "interactiva"){
+	if (modalidad == "Interactiva"){
 		printf("Lista de elementos en el carrito: ");
 		imprimirlista(Carrito);
 		printf("Lista de elementos en la banda transportadora: ");
@@ -126,7 +137,7 @@ void simulacion(ListaEnlazada *Carrito,ColaCarrito *BandaT, Stack *Pila, ListaEn
 			Bolsa = malloc(sizeof(ListaEnlazada));
 			Inicialize(Bolsa);
 		}
-		if(tiempo>0 && modalidad == "interactiva"){
+		if(tiempo>0 && modalidad == "Interactiva"){
 			printf("Lista de elementos en el carrito: ");
 			imprimirlista(Carrito);
 			printf("\nLista de elementos en la banda transportadora: ");
@@ -141,6 +152,7 @@ void simulacion(ListaEnlazada *Carrito,ColaCarrito *BandaT, Stack *Pila, ListaEn
 		getchar();
 		tiempo ++;
 	}while (Carrito->head != NULL || BandaT->nraiz != NULL || Pila->head !=NULL);
+	tiempoclientes[numerocarrito] = tiempo + tiempofacturacion;
 }
 
 void moveralabanda(ListaEnlazada *Carrito, ColaCarrito *BandaT, int *volumen){

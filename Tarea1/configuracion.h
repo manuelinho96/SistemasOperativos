@@ -8,8 +8,7 @@ Estudiantes:
 
 #include <stdio.h>
 #include <string.h>
-#define __SIMULACION__
-#include "simulacion.h"
+#include "globals.h"
 
 // Imprimir opciones.
 void imprimiropciones();

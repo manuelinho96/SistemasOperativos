@@ -13,9 +13,12 @@ Estudiantes:
 #include "cola.h"
 #define __LISTA__
 #include "ListaEnlazada.h"
+#include "globals.h"
+#include "simulacion.h"
 #include "configuracion.h"
 #include "stack.h"
 #include <time.h>
+#include <math.h>
 
 // Menu del programa principal.
 void menu();

@@ -13,17 +13,16 @@ Estudiantes:
 TIPO: Funcion 
 DESCRIPCION: Se leen los productos que están indicados en un archivo
 ENTRADA: Nombre ----> Nombre del archivo
-SALIDA:  Productos ---> struct Producto (retorna NULL si hubo
-                       error y retorna la estructura en caso
-                       contrario) */
+SALIDA:  Void ---> (retorna NULL si hubo
+                       error) */
 
-struct Producto **LeerProductos(const char *Nombre){
+
+void LeerProductos(const char *Nombre){
     FILE *archivo;
     char caracteres[100];
     int i = 0;
     int x;
     Producto *Product;
-    Producto **Productos;
     char *token;
  	archivo = fopen(Nombre,"r");
  	if (archivo == NULL)
@@ -34,13 +33,13 @@ struct Producto **LeerProductos(const char *Nombre){
             i++;
         }
         cantidaddeproductos = i;
-        if ((Productos = malloc(i*sizeof(Producto)))==NULL) return NULL;
+        if ((Productos = malloc(i*sizeof(Producto)))==NULL) return;
         rewind(archivo);
         i = 0;
         while (feof(archivo) == 0)
  	    {
             fgets(caracteres,1000,archivo);
-            if ((Product = malloc(sizeof(Producto)))==NULL) return NULL;
+            if ((Product = malloc(sizeof(Producto)))==NULL) return;
             Productos[i] = Product;
             token = strtok(caracteres,"\t");
             x = 0;
@@ -55,7 +54,6 @@ struct Producto **LeerProductos(const char *Nombre){
  	    }
         fclose(archivo);
     }
-    return Productos;
 }
 
 /******************** IMPRIMIRPRODUCTOS *********************/
@@ -69,7 +67,7 @@ void imprimirproductos(){
         for(int j = 0; j<cantidaddeproductos; j++){
             printf("Nombre: %s", Productos[j]->Nombre);
             printf(" Peso: %d", Productos[j]->Peso);
-            printf(" Complejidad: %d\n", Productos[j]->Complejidad);
+            printf(" Complejidad: %f\n", Productos[j]->Complejidad);
     }
 }
 

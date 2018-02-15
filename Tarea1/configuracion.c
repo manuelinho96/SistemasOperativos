@@ -19,12 +19,12 @@ void imprimiropciones(){
     printf("La cantidad de carritos en la cola es: %d \n", carritoEnCola);
     printf("La cantidad maxima de productos que puede tener el carrito es: %d\n", maxproductscarrito);
     printf("La capacidad maxima de la banda transportadora es: %d cc\n", maxbt);
-    printf("La velocidad de la cajera es: %f.2 ops\n", velocidadcajera);
+    printf("La velocidad de la cajera es: %.2f ops\n", velocidadcajera);
     printf("La velocidad del embolsador es: %d spb\n", velocidadembolsador);
     printf("El tiempo de facturacion es: %d s\n", tiempofacturacion);
     printf("La capacidad maxima del area de embolsado es: %d cc\n", maxareaembolsado);
     printf("La capacidad maxima de una bolsa: %d cc\n", maxbolsa);
-    printf("Introduzca enter para volver al menu anterior: ");
+    printf("Introduzca enter para volver al menu anterior: \n");
 }
 
 /******************** MENUOPCIONES *********************/

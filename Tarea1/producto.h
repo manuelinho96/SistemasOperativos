@@ -15,5 +15,5 @@ nombre, peso y tiempo en procesarse de un producto */
 typedef struct Producto{
     char Nombre[100];
     int Peso;
-    int Complejidad;
+    double Complejidad;
 }Producto;

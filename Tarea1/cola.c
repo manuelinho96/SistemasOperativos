@@ -8,6 +8,11 @@ Estudiantes:
 
 #include "cola.h"
 
+void iniciarcola(ColaCarrito * cola){
+    cola->nraiz = NULL;
+    cola->nfinal = NULL;
+ };
+
 /******************** COLAVACIA ********************/
 /*
 TIPO: Funcion 
@@ -15,7 +20,6 @@ DESCRIPCION: Determina si una cola esta vacia
 ENTRADA: cola ----> ColaCarrito (Estructura de Cola) 
 SALIDA:  int  ----> Entero que indica si la cola esta vacia:
                     1 si lo está, 0 lo contrario */
-
 int colavacia(ColaCarrito *cola){
     if ((*cola).nraiz == NULL) {
         return 1;

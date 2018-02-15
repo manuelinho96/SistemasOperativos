@@ -1,5 +1,10 @@
 #include "cola.h"
 
+void iniciarcola(ColaCarrito * cola){
+    cola->nraiz = NULL;
+    cola->nfinal = NULL;
+ };
+
 int colavacia(ColaCarrito *cola){
     if ((*cola).nraiz == NULL) {
         return 1;

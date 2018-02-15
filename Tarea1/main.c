@@ -1,12 +1,23 @@
 #include "main.h"
 
+const char *modalidad = "Interactiva";
+int carritoEnCola = 3;
+int maxproductscarrito = 30;
+int maxbt = 200;
+float velocidadcajera = 1;
+int velocidadembolsador = 4;
+int tiempofacturacion = 130;
+int maxareaembolsado = 150;
+int maxbolsa = 120;
+int cantidaddeproductos = 0;
+
 int main (int argc, char *argv[]){
 	if (argc <= 1){
 		printf("No se introdujo un nombre de archivo de inventario, error.\n");
 		return 1;
 	}
 	else if(argc == 2){
-		Productos = LeerProductos(argv[1]);
+		LeerProductos(argv[1]);
 		if(Productos == NULL){
 			printf("Error al abrir el archivo de entrada\n");
 			return 1;
@@ -61,7 +72,7 @@ int main (int argc, char *argv[]){
                 return 0;
             }
             else{
-                printf("Introdujo una opcion erronea");
+                printf("Introdujo una opcion erronea\n");
             }
             break;
         }
@@ -78,14 +89,13 @@ void simulacion(ListaEnlazada *Carrito,ColaCarrito *BandaT, Stack *Pila, ListaEn
 	int tiempo = 0;
 	int tiempoprocesamiento = 0;
 	int tiempoinicio = 0;
-	int facturacion = 0;
 	int volumenbt = 0;
 	ListaEnlazada *Bolsa;
 	struct Producto *Producto;
 	fflush(stdin);
 	printf("Presiona Enter para iniciar la simulacion\n");
 	getchar();
-	if (modalidad == "Interactiva"){
+	if (strcmp(modalidad,"Interactiva") == 0){
 		printf("Lista de elementos en el carrito: ");
 		imprimirlista(Carrito);
 		printf("Lista de elementos en la banda transportadora: ");
@@ -129,7 +139,7 @@ void simulacion(ListaEnlazada *Carrito,ColaCarrito *BandaT, Stack *Pila, ListaEn
 			anadirbolsa(Bolsas, Bolsa);
 			free(Bolsa);
 		}
-		if(tiempo>0 && modalidad == "Interactiva"){
+		if(tiempo>0 && strcmp(modalidad,"Interactiva") == 0){
 			printf("Lista de elementos en el carrito: ");
 			imprimirlista(Carrito);
 			printf("\nLista de elementos en la banda transportadora: ");

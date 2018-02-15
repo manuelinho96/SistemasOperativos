@@ -1,17 +1,26 @@
-main.o: main.c cola.o lista.o configuracion.o simulacion.o pila.o
-	gcc -g main.c cola.o ListaEnlazada.o configuracion.o simulacion.o stack.o -o $@	
+CC = gcc
+GCC = gcc -c
+CCFLAGS = -g -Wall -std=gnu99
+
+mercado: main.c cola.o lista.o configuracion.o simulacion.o pila.o
+	$(CC) $(CCFLAGS) main.c cola.o ListaEnlazada.o stack.o configuracion.o simulacion.o -o $@ -lm
 
 cola.o: cola.c producto.h
-	gcc -c cola.c
+	$(GCC) cola.c
 
 lista.o: ListaEnlazada.c producto.h
-	gcc -c ListaEnlazada.c
+	$(GCC) ListaEnlazada.c
 
-configuracion.o: configuracion.c simulacion.h
-	gcc -c configuracion.c
+configuracion.o: configuracion.c simulacion.h globals.h
+	$(GCC) configuracion.c
 
-simulacion.o: simulacion.c ListaEnlazada.h
-	gcc -c simulacion.c
+simulacion.o: simulacion.c ListaEnlazada.h globals.h
+	$(GCC) simulacion.c
 
 pila.o: stack.c producto.h
-	gcc -c stack.c
+	$(GCC) stack.c
+
+.PHONY: clean
+
+clean:
+	rm -rf *.o mercado

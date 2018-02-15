@@ -1,6 +1,6 @@
 #include "simulacion.h"
 
-struct Producto **LeerProductos(const char *Nombre){
+void LeerProductos(const char *Nombre){
 
     FILE *archivo;
     char caracteres[100];
@@ -8,7 +8,6 @@ struct Producto **LeerProductos(const char *Nombre){
     int x;
 
     Producto *Product;
-    Producto **Productos;
     char *token;
 
  	archivo = fopen(Nombre,"r");
@@ -21,13 +20,13 @@ struct Producto **LeerProductos(const char *Nombre){
             i++;
         }
         cantidaddeproductos = i;
-        if ((Productos = malloc(i*sizeof(Producto)))==NULL) return NULL;
+        if ((Productos = malloc(i*sizeof(Producto)))==NULL) return;
         rewind(archivo);
         i = 0;
         while (feof(archivo) == 0)
  	    {
             fgets(caracteres,1000,archivo);
-            if ((Product = malloc(sizeof(Producto)))==NULL) return NULL;
+            if ((Product = malloc(sizeof(Producto)))==NULL) return;
             Productos[i] = Product;
             token = strtok(caracteres,"\t");
             x = 0;
@@ -42,14 +41,13 @@ struct Producto **LeerProductos(const char *Nombre){
  	    }
         fclose(archivo);
     }
-    return Productos;
 }
 
 void imprimirproductos(){
         for(int j = 0; j<cantidaddeproductos; j++){
             printf("Nombre: %s", Productos[j]->Nombre);
             printf(" Peso: %d", Productos[j]->Peso);
-            printf(" Complejidad: %d\n", Productos[j]->Complejidad);
+            printf(" Complejidad: %f\n", Productos[j]->Complejidad);
     }
 }
 

@@ -3,6 +3,7 @@
         "main.h": "c",
         "configuracion.h": "c",
         "simulacion.h": "c",
-        "listaenlazada.h": "c"
+        "listaenlazada.h": "c",
+        "globals.h": "c"
     }
 }

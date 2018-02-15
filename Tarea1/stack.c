@@ -1,6 +1,4 @@
-﻿#include "stack.h"
-
-/* IMPLEMENTACION DE LA ESTRUCTURA DE DATOS PILA
+﻿/* IMPLEMENTACION DE LAS FUNCIONES DE PILA
 
 Estudiantes:
 - Ian Goldberg		# 14-10406
@@ -8,24 +6,28 @@ Estudiantes:
 - David Segura		# 13-11341
 */
 
+#include "stack.h"
+
 /******************** INITIALIZATION ********************/
 /*
 TIPO: Funcion 
-DESCRIPCION: Funcion que inicializa la estructura de pila
-			 mediante listas
+DESCRIPCION: Inicializa la estructura de pila
 ENTRADA: s ----> Stack */
+
 void initialization(Stack *s){
 	s->head = NULL;
 	s->size = 0;
 }
+
 /************************** PUSH **************************/
 /*
 TIPO: Funcion 
-DESCRIPCION: Funcion que agrega un elemento a la lista, de
+DESCRIPCION: Agrega un elemento a la lista, de
 			 esta manera se hace la operacion de apilar
 ENTRADA: s ----> Stack
 		 itm --> Producto
 SALIDA:  int (-1 para error y 0 para exito) */
+
 int push(Stack *s, struct Producto *itm){
 	Element *new_element;
 	if ((new_element = malloc (sizeof (Element))) == NULL) return -1;
@@ -36,15 +38,17 @@ int push(Stack *s, struct Producto *itm){
 	s->size++;
 	return 0;
 }
+
 /************************** POP **************************/
 /*
 TIPO: Funcion 
-DESCRIPCION: Funcion que elimina un elemento a la lista, de
-			 esta manera se hace la operacion de desenpilar
+DESCRIPCION: Elimina un elemento de la lista y se retorna,
+			 de esta manera se hace la operacion de desenpilar
 ENTRADA: s ----> Stack
 SALIDA:  recovery ---> struct Producto (retorna NULL si hubo
 					   error y retorna la estructura en caso
 					   contrario) */
+
 struct Producto *pop(Stack *s){
 	Element *del_element;
 	struct Producto *recovery;
@@ -57,11 +61,13 @@ struct Producto *pop(Stack *s){
 	if(s->size == 0) s->head = NULL;
 	return recovery;
 }
+
 /************************** SHOW **************************/
 /*
 TIPO: Funcion 
-DESCRIPCION: Funcion que muestra los elementos de la pila
+DESCRIPCION: Muestra los elementos de la pila
 ENTRADA: s ----> Stack */
+
 void show(Stack *s){
 	Element *actual;
 	int i;
@@ -77,7 +83,13 @@ void show(Stack *s){
 	printf("\n");
 }
 
-/***************Calcular Area de la Pila**********/
+/******************** AREAPILA ********************/
+/*
+TIPO: Funcion 
+DESCRIPCION: Calcula la cantidad en peso que hay en el
+			 area de embolsado en base a la pila.
+ENTRADA: s ----> Stack 
+SALIDA:  area --> Cantidad en peso en el area de la pila*/
 
 int AreaPila(Stack *s){
 	Element *actual;

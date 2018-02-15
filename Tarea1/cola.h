@@ -1,16 +1,32 @@
+/* IMPLEMENTACION DE LA ESTRUCTURA DE DATOS COLA
+
+Estudiantes:
+- Ian Goldberg		# 14-10406
+- Manuel Rodriguez	# 13-11223
+- David Segura		# 13-11341
+*/
+
 #include <stdlib.h>
 #include <stdio.h>
 #define __PRODUCTOS__
 #include "producto.h"
 
-// Estructura de los nodos
+/************************ NODOCOLA ************************/
+/*
+TIPO: Estructura de datos
+DESCRIPCION: Implementacion de un nodo que contendra dos
+estructuras para conformar una lista de productos */
 
 struct nodocola {
     struct Producto *Dato;
     struct nodocola *siguiente;
 };
 
-// Estructura de cola
+/************************ COLA ************************/
+/*
+TIPO: Estructura de datos
+DESCRIPCION: Implementacion de un estructura que contendra dos
+nodos para simular una cola */
 
 typedef struct Cola{
     struct nodocola *nraiz;

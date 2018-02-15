@@ -1,5 +1,14 @@
+/* IMPLEMENTACION DEL MAIN DEL PROGRAMA
+
+Estudiantes:
+- Ian Goldberg      # 14-10406
+- Manuel Rodriguez  # 13-11223
+- David Segura      # 13-11341
+*/
+
 #include "main.h"
 
+// MAIN DEL PROGRAMA
 int main (int argc, char *argv[]){
 	if (argc <= 1){
 		printf("No se introdujo un nombre de archivo de inventario, error.\n");
@@ -68,11 +77,32 @@ int main (int argc, char *argv[]){
     }
 }
 
+/************************ MENU ************************/
+/*
+TIPO: Funcion
+DESCRIPCION: Menu del programa principal */
+
 void menu(){
     printf("1. Ejecutar la Simulacion\n");
     printf("2. Cambiar las opciones de la simulacion\n");
     printf("3. Salir del programa\n");
 }
+
+/*********************** SIMULACION ************************/
+/*
+TIPO: Funcion 
+DESCRIPCION: Ejecucion de la simulacion de procesar a un cliente
+ENTRADA: Carrito 			----> Lista Enlazada que contiene los productos
+								  contenidos en el carrito
+         BandaT			    ----> Cola que simulara la banda transportadora
+         Pila 			    ----> Pila que simulara el area de embolsado
+         Bolsas			    ----> Lista Enlazada que simularan las bolsas
+         modalidad 			----> String que indica la modalidad de la ejecucion
+         numerocarrito	    ----> Entero que indica el numero de cliente que esta
+         						  siendo atendido
+         tiempoclientes     ----> Arreglo de enteros que almacena el tiempo
+                                  que tardó cada cliente
+*/
 
 void simulacion(ListaEnlazada *Carrito,ColaCarrito *BandaT, Stack *Pila, ListaEnlazada *Bolsas,const char *modalidad,int numerocarrito,int *tiempoclientes){
 	int tiempo = 0;
@@ -148,6 +178,18 @@ void simulacion(ListaEnlazada *Carrito,ColaCarrito *BandaT, Stack *Pila, ListaEn
 	removelist(Bolsas);
 }
 
+/*********************** MOVERALABANDA ************************/
+/*
+TIPO: Funcion 
+DESCRIPCION: Simulacion de colocar los productos del carrito en la banda
+			 transbordadora 
+ENTRADA: Carrito 			----> Lista Enlazada que contiene los productos
+								  contenidos en el carrito
+         BandaT			    ----> Cola que simulara la banda transportadora
+         volumen 			----> Entero que indica la acumulacion en peso de
+         						  los productos en la banda transbordadora
+*/
+
 void moveralabanda(ListaEnlazada *Carrito, ColaCarrito *BandaT, int *volumen){
 	while (Carrito->head->Dato->Peso + *volumen <= maxbt && Carrito->head != NULL){
 		struct Producto *objeto = removeelementlist(Carrito);
@@ -162,6 +204,15 @@ void moveralabanda(ListaEnlazada *Carrito, ColaCarrito *BandaT, int *volumen){
 		insertarnodocola(objeto, BandaT);
 	}
 }
+
+/*********************** EMBOLSAR ************************/
+/*
+TIPO: Funcion 
+DESCRIPCION: Simulacion del embolsamiento de los productos encontrados
+			 en el area de embolsado
+ENTRADA: Pila 			    ----> Pila que simulara el area de embolsado
+         Bolsa 				----> Lista Enlazada que simula una bolsa
+*/
 
 void embolsar(Stack *Pila, ListaEnlazada *Bolsa){
 	int volumen = 0;

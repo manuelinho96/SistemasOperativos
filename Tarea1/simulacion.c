@@ -1,18 +1,31 @@
+/* IMPLEMENTACION DE LAS FUNCIONES DE LA SIMULACION
+
+Estudiantes:
+- Ian Goldberg      # 14-10406
+- Manuel Rodriguez  # 13-11223
+- David Segura      # 13-11341
+*/
+
 #include "simulacion.h"
 
-struct Producto **LeerProductos(const char *Nombre){
+/*********************** LEERPRODUCTOS ************************/
+/*
+TIPO: Funcion 
+DESCRIPCION: Se leen los productos que están indicados en un archivo
+ENTRADA: Nombre ----> Nombre del archivo
+SALIDA:  Productos ---> struct Producto (retorna NULL si hubo
+                       error y retorna la estructura en caso
+                       contrario) */
 
+struct Producto **LeerProductos(const char *Nombre){
     FILE *archivo;
     char caracteres[100];
     int i = 0;
     int x;
-
     Producto *Product;
     Producto **Productos;
     char *token;
-
  	archivo = fopen(Nombre,"r");
- 	
  	if (archivo == NULL)
  		exit(1);
  	else{
@@ -45,6 +58,13 @@ struct Producto **LeerProductos(const char *Nombre){
     return Productos;
 }
 
+/******************** IMPRIMIRPRODUCTOS *********************/
+/*
+TIPO: Funcion 
+DESCRIPCION: Imprime la lista de los productos que se encuentran en
+             el almacen.
+*/
+
 void imprimirproductos(){
         for(int j = 0; j<cantidaddeproductos; j++){
             printf("Nombre: %s", Productos[j]->Nombre);
@@ -52,6 +72,14 @@ void imprimirproductos(){
             printf(" Complejidad: %d\n", Productos[j]->Complejidad);
     }
 }
+
+/*********************** GENERARCARRITO ************************/
+/*
+TIPO: Funcion 
+DESCRIPCION: Genera un carrito con productos tomados al azar
+ENTRADA: Carrito ----> Lista Enlazada
+SALIDA:  productoscarrito ---> Retorna un entero que indica el numero
+                               de productos tomados*/
 
 int generarcarrito(ListaEnlazada *Carrito){
     int productoscarrito = rand() % maxproductscarrito;
@@ -65,6 +93,20 @@ int generarcarrito(ListaEnlazada *Carrito){
     }
     return productoscarrito;
 }
+
+/*********************** WRITELOGFILE ************************/
+/*
+TIPO: Funcion 
+DESCRIPCION: Escribe el resultado de la simulacion en un archivo
+ENTRADA: cantidaddecarritos ----> Entero que indica la cantidad de carritos
+         numproductscarrito ----> Entero que indica el numero de productos
+                                  en el carrito
+         tiempoclientes     ----> Arreglo de enteros que almacena el tiempo
+                                  que tardó cada cliente
+         tiempototal        ----> Entero que indica el tiempo total de todos
+                                  los clientes 
+         infile             ----> Nombre del archivo de entradas
+*/
 
 void writelogfile(int cantidaddecarritos, int *numproductscarrito, int *tiempoclientes, int tiempototal, const char *infile){
     FILE *logfile;

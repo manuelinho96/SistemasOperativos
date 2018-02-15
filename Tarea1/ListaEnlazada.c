@@ -1,11 +1,32 @@
+/* IMPLEMENTACION DE LAS FUNCIONES DE LISTA ENLAZADA
+
+Estudiantes:
+- Ian Goldberg      # 14-10406
+- Manuel Rodriguez  # 13-11223
+- David Segura      # 13-11341
+*/
+
 #include "ListaEnlazada.h"
 
-void Inicialize(struct ListaEnlazada * Lista)
-{
-    Lista->head = NULL;
-};
+/******************** INICIALIZE ********************/
+/*
+TIPO: Funcion 
+DESCRIPCION: Inicializa la estructura de lista enlazada
+ENTRADA: Lista ----> Lista Enlazada */
 
-int anadirbolsa(struct ListaEnlazada * Lista, struct ListaEnlazada *Bolsa){
+void Inicialize(struct ListaEnlazada * Lista){
+    Lista->head = NULL;
+}
+
+/************************** ANADIRBOLSA **************************/
+/*
+TIPO: Funcion 
+DESCRIPCION: Agrega una bolsa a la lista
+ENTRADA: Lista ----> Lista Enlazada a la que se agregara la bolsa
+         Bolsa ----> Lista Enlazada que contiene productos
+SALIDA:  int (-1 para error y 0 para exito) */
+
+int anadirbolsa(struct ListaEnlazada *Lista, struct ListaEnlazada *Bolsa){
     struct NodoLista *nodo;
     struct NodoLista *actual = Lista->head;
     struct NodoLista *anterior = NULL;
@@ -28,11 +49,19 @@ int anadirbolsa(struct ListaEnlazada * Lista, struct ListaEnlazada *Bolsa){
     }
 }
 
+/************************** ANADIRSINBOLSA **************************/
+/*
+TIPO: Funcion 
+DESCRIPCION: Agrega un producto a la lista (USADO PARA EMBOLSAR)
+ENTRADA: Lista ----> Lista Enlazada a la que se agregara el producto
+         Dato  ----> Producto
+SALIDA:  int (-1 para error y 0 para exito) */
+
 int anadirsinbolsa(struct ListaEnlazada * Lista, struct Producto *Dato){
     struct NodoLista *nodo;
     struct NodoLista *actual = Lista->head;
     struct NodoLista *anterior = NULL;
-    nodo = malloc(sizeof(struct NodoLista));
+    if ((nodo = malloc(sizeof(struct NodoLista)))==NULL) return -1;
     nodo->Dato = Dato;
     nodo->esBolsa = 0 ;
     nodo->next = NULL;
@@ -49,6 +78,14 @@ int anadirsinbolsa(struct ListaEnlazada * Lista, struct Producto *Dato){
         return 0;
     }
 }
+
+/************************** ADDELEMENTLIST **************************/
+/*
+TIPO: Funcion 
+DESCRIPCION: Agrega un producto a la lista
+ENTRADA: Lista ----> Lista Enlazada a la que se agregara el producto
+         Dato  ----> Producto
+SALIDA:  int (-1 para error y 0 para exito) */
 
 int addelementlist(struct ListaEnlazada * Lista, struct Producto * Dato1){
     struct NodoLista *nodo;
@@ -84,7 +121,14 @@ int addelementlist(struct ListaEnlazada * Lista, struct Producto * Dato1){
         nodo->next = actual;
         return 0;
     }
-};
+}
+
+/*********************** REMOVEELEMENTLIST ***********************/
+/*
+TIPO: Funcion 
+DESCRIPCION: Elimina un elemento de la lista y lo retorna
+ENTRADA: Lista ----> Lista Enlazada
+SALIDA:  Dato  ----> struct Producto */
 
 struct Producto *removeelementlist(struct ListaEnlazada *Lista){
     if (Lista->head != NULL){
@@ -95,6 +139,13 @@ struct Producto *removeelementlist(struct ListaEnlazada *Lista){
         return Dato;
     }
 }
+
+/******************** REMOVELIST ********************/
+/*
+TIPO: Funcion 
+DESCRIPCION: Liberar de la memoria el contenido de una lista enlazada
+ENTRADA: Lista ----> Lista Enlazada 
+SALIDA:  int   ----> entero  */
 
 int removelist(struct ListaEnlazada * Lista){
     struct NodoLista * actual = Lista->head;
@@ -109,6 +160,12 @@ int removelist(struct ListaEnlazada * Lista){
     return 0;
 }
 
+/******************** IMPRIMIRLISTA ********************/
+/*
+TIPO: Funcion 
+DESCRIPCION: Imprime los datos de la lista
+ENTRADA: lista ----> Lista Enlazada 
+*/
 
 void imprimirlista(struct ListaEnlazada *lista){
     struct NodoLista *actual = lista->head;
@@ -123,6 +180,13 @@ void imprimirlista(struct ListaEnlazada *lista){
         }
     }
 }
+
+/******************** IMPRIMIRLISTABOLSA ********************/
+/*
+TIPO: Funcion 
+DESCRIPCION: Imprime los productos de las bolsas
+ENTRADA: lista ----> Lista Enlazada 
+*/
 
 void imprimirlistabolsa(struct ListaEnlazada *lista){
     int i = 0;

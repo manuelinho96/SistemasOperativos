@@ -1,4 +1,18 @@
+/* IMPLEMENTACION DE FUNCIONES PARA LA CONFIGURACION
+
+Estudiantes:
+- Ian Goldberg      # 14-10406
+- Manuel Rodriguez  # 13-11223
+- David Segura      # 13-11341
+*/
+
 #include "configuracion.h"
+
+/******************** IMPRIMIROPCIONES *********************/
+/*
+TIPO: Funcion 
+DESCRIPCION: Imprime la configuracion actual de las opciones
+*/
 
 void imprimiropciones(){
     printf("La modalidad es: %s\n", modalidad);
@@ -13,6 +27,12 @@ void imprimiropciones(){
     printf("Introduzca enter para volver al menu anterior: ");
 }
 
+/******************** MENUOPCIONES *********************/
+/*
+TIPO: Funcion 
+DESCRIPCION: Muestra el menu de opciones a configurar
+*/
+
 void menuopciones(){
     printf("1. Modalidad\n");
     printf("2. Cantidad de carritos en la cola\n");
@@ -26,6 +46,13 @@ void menuopciones(){
     printf("10. Mostrar configuracion actual\n");
     printf("11. Regresar al menu\n");
 }
+
+/******************** CONFIGURACION *********************/
+/*
+TIPO: Funcion 
+DESCRIPCION: Configura las opciones con las que se iniciara la
+             simulacion
+*/
 
 void configuracion(){
     int opcion;

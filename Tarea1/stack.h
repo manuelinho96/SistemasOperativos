@@ -1,3 +1,11 @@
+/* IMPLEMENTACION DE LA ESTRUCTURA DE DATOS PILA
+
+Estudiantes:
+- Ian Goldberg		# 14-10406
+- Manuel Rodriguez	# 13-11223
+- David Segura		# 13-11341
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #ifndef __PRODUCTOS__
@@ -10,6 +18,7 @@
 TIPO: Estructura de datos
 DESCRIPCION: Implementacion de un nodo que contendra dos
 estructuras para simular una lista simple */
+
 typedef struct StackElement{
 	struct Producto *item; 
 	struct StackElement *next;
@@ -22,6 +31,7 @@ DESCRIPCION: Implementacion de un nodo que contendra una
 estructura con el primer elemento de la lista y un entero
 que representara la cantidad de elementos en la lista, simulando
 de esta manera una pila */
+
 typedef struct ListLocation{
 	Element *head;
 	int size;
@@ -40,5 +50,4 @@ struct Producto *pop(Stack *s);
 void show(Stack *s);
 
 // Calcular area de una pila.
-
 int AreaPila(Stack *s);

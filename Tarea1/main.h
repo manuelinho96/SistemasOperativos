@@ -1,3 +1,11 @@
+/* DECLARACION DE LAS FUNCIONES DEL MAIN
+
+Estudiantes:
+- Ian Goldberg      # 14-10406
+- Manuel Rodriguez  # 13-11223
+- David Segura      # 13-11341
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -10,7 +18,6 @@
 #include <time.h>
 
 // Menu del programa principal.
-
 void menu();
 
 // Funcion que ejecuta la simulacion de un carrito.

@@ -39,7 +39,7 @@ int main (int argc, char *argv[]){
     while(1){
         menu();
         while(1){
-            printf("Ingrese una opcion: ");
+            printf("Ingrese el número entero asociado a la opción deseada: ");
             scanf("%d", &opcion);
             if (opcion == 1){
             	int tiempoclientes[carritoEnCola];
@@ -123,9 +123,10 @@ void simulacion(ListaEnlazada *Carrito,ColaCarrito *BandaT, Stack *Pila, ListaEn
 	ListaEnlazada *Bolsa;
 	struct Producto *Producto;
 	fflush(stdin);
-	printf("Presiona Enter para iniciar la simulacion\n");
-	getchar();
 	if (strcmp(modalidad,"Interactiva") == 0){
+	 	while ( getchar() != '\n' );
+		printf("Presiona Enter para iniciar la simulacion\n");
+		getchar();
 		printf("Lista de elementos en el carrito: ");
 		imprimirlista(Carrito);
 		printf("Lista de elementos en la banda transportadora: ");
@@ -180,8 +181,10 @@ void simulacion(ListaEnlazada *Carrito,ColaCarrito *BandaT, Stack *Pila, ListaEn
 			imprimirlistabolsa(Bolsas);
 		}
 		fflush(stdin);
-		printf("Presiona Enter para continuar la simulacion: \n");
-		getchar();
+		if(strcmp(modalidad,"Interactiva")==0){
+			printf("Presiona Enter para continuar la simulacion: \n");
+			getchar();
+		}
 		tiempo ++;
 	}while (Carrito->head != NULL || BandaT->nraiz != NULL || Pila->head !=NULL);
 	tiempoclientes[numerocarrito] = tiempo + tiempofacturacion;

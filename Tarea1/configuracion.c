@@ -59,6 +59,7 @@ void configuracion(){
     while (1){
         menuopciones();
         while(1){
+            printf("¡ALERTA! Todos los valores ingresados para configurar las opciones deben ser números enteros.\n ");
             printf("Ingrese una opcion: ");
             scanf("%d", &opcion);
             if ( opcion == 1 ){

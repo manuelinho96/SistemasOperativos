@@ -193,7 +193,7 @@ void imprimirlistabolsa(struct ListaEnlazada *lista){
     struct NodoLista *actual = lista->head;
     while(actual != NULL){
         if(actual->next != NULL && actual->esBolsa == 1){
-            printf("Bolsa %d: ", i);
+            printf("Bolsa %d: ", i+1);
             imprimirlista(actual->Bolsa);
             actual = actual->next;
             i++;
@@ -203,7 +203,7 @@ void imprimirlistabolsa(struct ListaEnlazada *lista){
             actual = actual->next;
         }
         else if(actual->next == NULL && actual->esBolsa == 1){
-            printf("Bolsa %d: ", i);
+            printf("Bolsa %d: ", i+1);
             imprimirlista(actual->Bolsa);
             actual = actual->next;
             i++;

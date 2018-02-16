@@ -1,0 +1,13 @@
+Bienvenido al Simulador de Tienda de Autoservicio.
+Para compilar el programa ejecute la instruccion: make
+Para realizar la simulacion ejecute: ./mercado archivodeentrada
+Por favor ingresar opciones con numeros enteros y cambiar las variables de simulacion
+con el tipo de variable fijado en el encabezado globals.h
+Despues de realizar las simulaciones se puede ejecutar: make clean
+para limpiar el area de trabajo.
+
+
+Hecho por los Estudiantes:
+- Ian Goldberg      # 14-10406
+- Manuel Rodriguez  # 13-11223
+- David Segura      # 13-11341

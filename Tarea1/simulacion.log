@@ -1,9 +1,9 @@
 Nombre del archivo de entrada: entrada1.txt
 Cantidad de carritos: 3
 Numero de productos en cada carrito: 
-Carrito 1: 21
-Carrito 2: 21
-Carrito 3: 21
+Carrito 1: 24
+Carrito 2: 24
+Carrito 3: 24
 Capacidad de la banda transportadora: 200
 Velocidad de la cajera: 1.000000
 Velocidad del embolsador: 4
@@ -11,7 +11,71 @@ Tiempo de facturacion: 130
 Capacidad del area de embolsado: 150
 Capacidad de una bolsa: 120
 Tiempo en procesar cada cliente: 
-Cliente 1: 211
-Cliente 2: 211
-Cliente 3: 211
-Tiempo total: 633
+Cliente 1: 220
+Cliente 2: 220
+Cliente 3: 220
+Tiempo total: 660Nombre del archivo de entrada: entrada1.txt
+Cantidad de carritos: 3
+Numero de productos en cada carrito: 
+Carrito 1: 4
+Carrito 2: 4
+Carrito 3: 4
+Capacidad de la banda transportadora: 200
+Velocidad de la cajera: 1.000000
+Velocidad del embolsador: 4
+Tiempo de facturacion: 130
+Capacidad del area de embolsado: 150
+Capacidad de una bolsa: 120
+Tiempo en procesar cada cliente: 
+Cliente 1: 143
+Cliente 2: 143
+Cliente 3: 143
+Tiempo total: 429Nombre del archivo de entrada: entrada1.txt
+Cantidad de carritos: 3
+Numero de productos en cada carrito: 
+Carrito 1: 20
+Carrito 2: 20
+Carrito 3: 20
+Capacidad de la banda transportadora: 200
+Velocidad de la cajera: 1.000000
+Velocidad del embolsador: 4
+Tiempo de facturacion: 130
+Capacidad del area de embolsado: 150
+Capacidad de una bolsa: 120
+Tiempo en procesar cada cliente: 
+Cliente 1: 200
+Cliente 2: 200
+Cliente 3: 200
+Tiempo total: 600Nombre del archivo de entrada: entrada1.txt
+Cantidad de carritos: 3
+Numero de productos en cada carrito: 
+Carrito 1: 20
+Carrito 2: 20
+Carrito 3: 20
+Capacidad de la banda transportadora: 200
+Velocidad de la cajera: 1.000000
+Velocidad del embolsador: 4
+Tiempo de facturacion: 130
+Capacidad del area de embolsado: 150
+Capacidad de una bolsa: 120
+Tiempo en procesar cada cliente: 
+Cliente 1: 200
+Cliente 2: 200
+Cliente 3: 200
+Tiempo total: 600Nombre del archivo de entrada: entrada1.txt
+Cantidad de carritos: 3
+Numero de productos en cada carrito: 
+Carrito 1: 29
+Carrito 2: 29
+Carrito 3: 29
+Capacidad de la banda transportadora: 200
+Velocidad de la cajera: 1.000000
+Velocidad del embolsador: 4
+Tiempo de facturacion: 130
+Capacidad del area de embolsado: 150
+Capacidad de una bolsa: 120
+Tiempo en procesar cada cliente: 
+Cliente 1: 232
+Cliente 2: 232
+Cliente 3: 232
+Tiempo total: 696

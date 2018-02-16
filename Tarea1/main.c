@@ -183,7 +183,7 @@ void simulacion(ListaEnlazada *Carrito,ColaCarrito *BandaT, Stack *Pila, ListaEn
 		fflush(stdin);
 		if(strcmp(modalidad,"Interactiva")==0){
 			printf("Presiona Enter para continuar la simulacion: \n");
-			getchar();
+			while ( getchar() != '\n' );
 		}
 		tiempo ++;
 	}while (Carrito->head != NULL || BandaT->nraiz != NULL || Pila->head !=NULL);

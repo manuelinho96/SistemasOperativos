@@ -19,38 +19,40 @@ SALIDA:  Void ---> (retorna NULL si hubo
 
 void LeerProductos(const char *Nombre){
     FILE *archivo;
-    char caracteres[100];
+    char caracteres[1000];
     int i = 0;
     int x;
     Producto *Product;
     char *token;
  	archivo = fopen(Nombre,"r");
- 	if (archivo == NULL)
+ 	if (archivo == NULL){
+        printf("Error al procesar el archivo de entrada\n");
  		exit(1);
+    }
  	else{
-        while (feof(archivo) == 0){
-            fgets(caracteres,1000,archivo);
-            i++;
+        while ( fgets(caracteres,1000,archivo) != NULL ){
+            if(caracteres[0] != "\n") i++;
         }
         cantidaddeproductos = i;
         if ((Productos = malloc(i*sizeof(Producto)))==NULL) return;
         rewind(archivo);
         i = 0;
-        while (feof(archivo) == 0)
+        while ( fgets(caracteres,1000,archivo) != NULL )
  	    {
-            fgets(caracteres,1000,archivo);
-            if ((Product = malloc(sizeof(Producto)))==NULL) return;
-            Productos[i] = Product;
-            token = strtok(caracteres,"\t");
-            x = 0;
-            while(token != NULL){
-                if ( x == 0 ) strcpy(Product->Nombre, token);
-                if ( x== 1 ) Product->Peso = atoi(token);
-                if ( x== 2 ) Product->Complejidad = atoi(token);
-                x++;
-                token = strtok(NULL,"\t");
+                if(caracteres[0] != "\n"){
+                if ((Product = malloc(sizeof(Producto)))==NULL) return;
+                Productos[i] = Product;
+                token = strtok(caracteres,"\t");
+                x = 0;
+                while(token != NULL){
+                    if ( x == 0 ) strcpy(Product->Nombre, token);
+                    if ( x== 1 ) Product->Peso = atoi(token);
+                    if ( x== 2 ) Product->Complejidad = atoi(token);
+                    x++;
+                    token = strtok(NULL,"\t");
+                }
+                i++;
             }
-            i++;
  	    }
         fclose(archivo);
     }
@@ -108,7 +110,7 @@ ENTRADA: cantidaddecarritos ----> Entero que indica la cantidad de carritos
 
 void writelogfile(int cantidaddecarritos, int *numproductscarrito, int *tiempoclientes, int tiempototal, const char *infile){
     FILE *logfile;
-    logfile = fopen("simulacion.log", "w");
+    logfile = fopen("simulacion.log", "a");
     if (fopen == NULL){
         printf("Error al escribir el log\n");
         exit(1);
@@ -129,7 +131,7 @@ void writelogfile(int cantidaddecarritos, int *numproductscarrito, int *tiempocl
         for(int i = 0; i<cantidaddecarritos; i++){
             fprintf(logfile, "Cliente %d: %d\n", i+1, tiempoclientes[i]);
         }
-        fprintf(logfile, "Tiempo total: %d", tiempototal);
+        fprintf(logfile, "Tiempo total: %d\n", tiempototal);
         fclose(logfile);
     }
 }

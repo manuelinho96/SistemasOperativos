@@ -46,7 +46,10 @@ void navegar_directorio(const char *name, const char *name2){
                 navegar_directorio(path, pathstring);
             }else {
                 snprintf(pathstring, sizeof(pathstring), "%s%s", name2, entry->d_name);
-
+                fp = fopen("archivo de prueba", "a"); // abrimos el archivo
+                if(fp == NULL) perror("error al abrir archivo");
+                fprintf(fp,"%s\n", pathstring); //escribimos en el archivo
+                fclose(fp); //lo cerramos
             }
         }
     }

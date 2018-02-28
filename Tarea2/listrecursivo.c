@@ -49,6 +49,7 @@ int main(void) {
     pid_t id_padre;	/* PID del proceso padre */
     pid_t id_hijo;	/* PID del proceso hijo */
     int descriptores[2];
+
     int   estado;	/* Estado de salida */
     int mensaje;
     DIR *dir;
@@ -64,7 +65,7 @@ int main(void) {
     close (descriptores[LEER]);
     write (descriptores[ESCRIBIR], "s", strlen("s"));
     close (descriptores[ESCRIBIR]);
-    wait(NULL);
+    while(wait(NULL)>0);
     printf("mi hijo termino\n");    
 
 /*     if ( (id_hijo = fork()) == 0 ){

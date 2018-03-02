@@ -1,8 +1,26 @@
+/* IMPLEMENTACION DE LA NAVEGACION DE DIRECTORIOS
+
+Estudiantes:
+- Ian Goldberg      # 14-10406
+- Manuel Rodriguez  # 13-11223
+- David Segura      # 13-11341
+*/
+
 #include "navdirectory.h"
 
+/****************** NAVEGAR_DIRECTORIO ******************/
+/*
+TIPO: Funcion 
+DESCRIPCION: Dado un nombre de directorio, explora los
+             directorios hijos.
+ENTRADA: name ----> Ruta de un directorio
+		 namestring ----> Ruta de un directorio sin /.
+         maxlength ----> Maxima altura de un arbol.
+         height ----> Altura acumulada por la navegacion del directorio.
+         includefiles ----> Booleano para determinar si se incluye
+         un archivo en la concatenacion de string o no.
+*/
 
-// Funcion que dado un nombre de directorio, explora los
-// directorios hijos.
 void navegar_directorio(const char *name, const char *namestring, 
 int maxlength, int height, int includefiles){
 

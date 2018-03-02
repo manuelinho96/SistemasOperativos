@@ -1,4 +1,20 @@
+/* IMPLEMENTACION DE LAS FUNCIONES PALINDROMOS
+
+Estudiantes:
+- Ian Goldberg      # 14-10406
+- Manuel Rodriguez  # 13-11223
+- David Segura      # 13-11341
+*/
+
 #include "palindromos.h"
+
+/************************** MIN **************************/
+/*
+TIPO: Funcion 
+DESCRIPCION: Determina el menor valor entre un par de numeros
+ENTRADA: a ----> Entero
+		 b ----> Entero
+SALIDA:  int (Entero menor) */
 
 int min(int a, int b){
 	if(a<b){
@@ -9,15 +25,29 @@ int min(int a, int b){
 	}
 }
 
+/************************** SUBSTR **************************/
+/*
+TIPO: Funcion 
+DESCRIPCION: Retorna un substring de una palabra
+ENTRADA: cadena ----> Palabra a la cual se le sacara un substring
+		 comienzo ----> Entero que indica en donde comienza el substring
+		 longitud ----> Entero que indica el tamaño del substring
+SALIDA:  char (substring) */
+
 char* substr(char* cadena, int comienzo, int longitud){
+	char *nuevo;
 	if (longitud == 0) longitud = strlen(cadena)-comienzo-1;
-	
-	char *nuevo = (char*)malloc(sizeof(char) * longitud);
-	
+	if (nuevo = (char*)malloc(sizeof(char) * longitud) == NULL) return;
 	strncpy(nuevo, cadena + comienzo, longitud);
-	
 	return nuevo;
 }
+
+/************************** MINUS **************************/
+/*
+TIPO: Funcion 
+DESCRIPCION: Transforma una letra mayuscula en minuscula
+ENTRADA: letra ----> Letra a transformar
+SALIDA:  char (Letra transformada) */
 
 char minus(char letra){
 	if (letra>=65 && letra<=90){
@@ -28,6 +58,13 @@ char minus(char letra){
 		return letra;
 	}
 }
+
+/***************** PALINDROMOSIMPARES *****************/
+/*
+TIPO: Funcion 
+DESCRIPCION: Encuentra los palindromos impares de un string
+ENTRADA: palabra ----> String a evaluar
+SALIDA:  int (Indica cuantos palindromos encontro) */
 
 int palindromosimpares(char *palabra){
 	int length = strlen(palabra);
@@ -68,6 +105,13 @@ int palindromosimpares(char *palabra){
 	}
 	return contador;
 }
+
+/***************** PALINDROMOSPARES *****************/
+/*
+TIPO: Funcion 
+DESCRIPCION: Encuentra los palindromos pares de un string
+ENTRADA: palabra ----> String a evaluar
+SALIDA:  int (Indica cuantos palindromos encontro) */
 
 int palindromospares(char *palabra){
 	int length = strlen(palabra);

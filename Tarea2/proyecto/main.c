@@ -1,3 +1,11 @@
+/* MAIN DEL PROGRAMA
+
+Estudiantes:
+- Ian Goldberg      # 14-10406
+- Manuel Rodriguez  # 13-11223
+- David Segura      # 13-11341
+*/
+
 #include "navdirectory.h"
 #include "palindromos.h"
 
@@ -81,7 +89,7 @@ int main(int argc, char *argv[]){
     }
     fclose(archivo);
     if( !existepalindromo ){
-        printf("no existen palindromos\n");
+        printf("No existen palindromos.\n");
     }
     return 0;
 }

@@ -75,6 +75,6 @@ int maxlength, int height, int includefiles){
     else{
         id_padre = getpid();
         while(wait(NULL)>0);
-        kill(id_padre,SIGKILL);
+        exit(0);
     }
 }

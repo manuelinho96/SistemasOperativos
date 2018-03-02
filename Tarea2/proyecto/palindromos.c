@@ -35,9 +35,8 @@ ENTRADA: cadena ----> Palabra a la cual se le sacara un substring
 SALIDA:  char (substring) */
 
 char* substr(char* cadena, int comienzo, int longitud){
-	char *nuevo;
+	char *nuevo = (char*)malloc(sizeof(char) * longitud);
 	if (longitud == 0) longitud = strlen(cadena)-comienzo-1;
-	if (nuevo = (char*)malloc(sizeof(char) * longitud) == NULL) return;
 	strncpy(nuevo, cadena + comienzo, longitud);
 	return nuevo;
 }

@@ -63,13 +63,10 @@ int maxlength, int height, int includefiles){
                 }
             }
         }else{
-            if (height == 0) kill(id_hijo,SIGKILL);
-            else{
-                fp = fopen("caminos.txt", "a");
-                if(fp == NULL) perror("error al abrir archivo");
-                fprintf(fp,"%s\n", namestring);
-                fclose(fp);
-            }
+            fp = fopen("caminos.txt", "a");
+            if(fp == NULL) perror("error al abrir archivo");
+            fprintf(fp,"%s\n", namestring);
+            fclose(fp);
         }
     }
     else{

@@ -23,7 +23,6 @@ Estudiantes:
 #include <sys/dir.h>
 #include <fcntl.h>
 #include <limits.h>
-#include <sys/ipc.h>
 
 // Funcion que dado un nombre de directorio, explora los directorios hijos.
 void navegar_directorio(const char *name, const char *name2, int maxlength, 

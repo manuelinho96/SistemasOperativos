@@ -1,0 +1,8 @@
+/home/manuel/manuelesmarico.txt manuel
+/home/manuelesmarico.txt manuelesmarico
+/home/alan.txt alan
+/home/manuel.pdf manuel
+/home/manuel.pdf pdf
+/home/manuel.word manuel
+/home/manuel/alan.xls alan
+/home/manuel.word manuel

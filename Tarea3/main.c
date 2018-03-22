@@ -150,7 +150,6 @@ void navegar_directorio(char* routename, int heightvalue){
     char path[PATH_MAX];
     char *archivoaux;
     char *claves;
-    int estado;
     if( maxlength != heightvalue ){
         if (!(dir = opendir(routename))){
             return NULL;
@@ -167,10 +166,10 @@ void navegar_directorio(char* routename, int heightvalue){
                     archivoaux = strsave(entry->d_name);
                     claves = strtok(archivoaux, "-.");
                     while( claves != NULL ){
-                        estado = buscarruta(claves);
-                        if (estado == 0){
-                            printf("insertare el path %s con la clave %s\n", path, claves);
-/*                             insertar(path, claves); */
+                        if (!buscar(path, claves)){
+                            printf("No esta en la tabla y se agrega\n");
+                            printf("%s %s\n", path, claves);
+                            insertar(path, claves);
                         }
                         claves = strtok(NULL, "-.");
                     }
@@ -192,7 +191,6 @@ void *indizar(void *args){
     parametros *p = (parametros *) args;
     char *routename = (char *) p->routename;
     int heightvalue = (int) p->height;
-    int estado;
     if( maxlength != heightvalue ){
         if (!(dir = opendir(routename))){
             return NULL;
@@ -202,17 +200,17 @@ void *indizar(void *args){
                 if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0) continue;
                     heightvalue++;
                     snprintf(path, sizeof(path), "%s/%s/", routename, entry->d_name);
-                    navegar_directorio(routename, heightvalue);
+                    navegar_directorio(path, heightvalue);
             } 
                 else {
                     snprintf(path, sizeof(path), "%s/%s", routename, entry->d_name);
                     archivoaux = strsave(entry->d_name);
                     claves = strtok(archivoaux, "-.");
                     while( claves != NULL ){
-                        estado = buscarruta(claves);
-                        if (estado == 0){
-                            printf("insertare el path %s con la clave %s\n", path, claves);
-/*                             insertar(path, claves); */
+                        if (!buscar(path, claves)){
+                            printf("No esta en la tabla y se agrega\n");
+                            printf("%s %s\n", path, claves);
+                            insertar(path, claves);
                         }
                         claves = strtok(NULL, "-.");
                     }
@@ -243,5 +241,7 @@ int main(){
         exit(EXIT_FAILURE); 
     }
     pthread_join(indezador, NULL);
-    buscarruta("manuel");
+    printf("resultado de buscar xdxd\n");
+    buscarruta("xdxd");
+    
 }

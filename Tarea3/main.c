@@ -158,18 +158,18 @@ void navegar_directorio(char* routename, int heightvalue){
             if (entry->d_type == DT_DIR) {
                 if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0) continue;
                     heightvalue++;
-                    snprintf(path, sizeof(path), "%s/%s/", routename, entry->d_name);
+                    snprintf(path, sizeof(path), "%s/%s", routename, entry->d_name);
                     navegar_directorio(path, heightvalue);
             } 
                 else {
-                    snprintf(path, sizeof(path), "%s%s", routename, entry->d_name);
+                    snprintf(path, sizeof(path), "%s/%s", routename, entry->d_name);
                     archivoaux = strsave(entry->d_name);
                     claves = strtok(archivoaux, "-.");
                     while( claves != NULL ){
                         if (!buscar(path, claves)){
-                            printf("No esta en la tabla y se agrega\n");
                             printf("%s %s\n", path, claves);
                             insertar(path, claves);
+                            insertarrutaarchivo(path, claves);
                         }
                         claves = strtok(NULL, "-.");
                     }
@@ -178,6 +178,16 @@ void navegar_directorio(char* routename, int heightvalue){
     }
     return NULL;
 
+}
+
+void insertarrutaarchivo(char *path, char *claves){
+    FILE *indice;
+    indice = fopen("indice.txt","a");
+    if ( indice == NULL ){
+        return;
+    }
+    fprintf(indice, "%s %s\n", path, claves);
+    fclose(indice);
 }
 
 void *indizar(void *args){
@@ -191,6 +201,7 @@ void *indizar(void *args){
     parametros *p = (parametros *) args;
     char *routename = (char *) p->routename;
     int heightvalue = (int) p->height;
+
     if( maxlength != heightvalue ){
         if (!(dir = opendir(routename))){
             return NULL;
@@ -199,7 +210,7 @@ void *indizar(void *args){
             if (entry->d_type == DT_DIR) {
                 if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0) continue;
                     heightvalue++;
-                    snprintf(path, sizeof(path), "%s/%s/", routename, entry->d_name);
+                    snprintf(path, sizeof(path), "%s/%s", routename, entry->d_name);
                     navegar_directorio(path, heightvalue);
             } 
                 else {
@@ -208,9 +219,9 @@ void *indizar(void *args){
                     claves = strtok(archivoaux, "-.");
                     while( claves != NULL ){
                         if (!buscar(path, claves)){
-                            printf("No esta en la tabla y se agrega\n");
                             printf("%s %s\n", path, claves);
                             insertar(path, claves);
+                            insertarrutaarchivo(path, claves);
                         }
                         claves = strtok(NULL, "-.");
                     }
@@ -220,7 +231,7 @@ void *indizar(void *args){
     return NULL;
 }
 
-int main(){
+int main(int argv, char *args[]){
 
     maxlength = 20;
     char nombre[200] = "indice.txt";
@@ -241,7 +252,7 @@ int main(){
         exit(EXIT_FAILURE); 
     }
     pthread_join(indezador, NULL);
-    printf("resultado de buscar xdxd\n");
-    buscarruta("xdxd");
+    printf("resultado de buscar %s\n", args[1]);
+    buscarruta(args[1]);
     
 }

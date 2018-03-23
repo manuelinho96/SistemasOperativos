@@ -1,22 +1,12 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <libgen.h>
-#include <pthread.h>   // Incluimos libreria necesaria para los threads
-#include <stdio.h>
-#include <stdlib.h>
+#include <pthread.h>
 #include <unistd.h>
-#include <sys/types.h>
-#include <fcntl.h>
-#include <string.h>
-#include <stdlib.h>
-#include <signal.h>
-#include <math.h>
-#include <time.h>
-#include <sys/time.h>
-#include <sched.h>
 #include <dirent.h>
 #include <getopt.h>
+#include <funciones.h>
+#include <tablahash.h>
 
 
 // Mutex
@@ -34,100 +24,22 @@ char archivoindice[NAME_MAX]="indice.txt";
 // Termino de busqueda
 char *termdebusqueda;
 
-// Estructura de las celdas de la tabla
-typedef struct celda
-{
-    char *ruta;
-    struct celda *next;
-} tcelda, *pcelda;
+// Declaracion de flags
+static struct option long_options[] ={
+    {"noupdate",    no_argument,      0, 'u'},
+    {"noadd",       no_argument,       0, 'a'},
+    {"index",       required_argument, 0, 'i'},
+    {"max",         required_argument, 0, 'm'},
+    {"dir",         required_argument, 0, 'd'},
+    {0, 0, 0, 0}
+};
+
 
 // Pametros de indexacion
 typedef struct ParametrosIndexar{
     char routename[PATH_MAX];
     int height;
 }parametros;
-
-// Tabla de 100 slots
-#define B 100
-static pcelda hashtable[100];
-
-// Crear tabla vacia
-void maketablenull(void){
-    int i;
-    for (i = 0; i < B; i++){
-        hashtable[i] = NULL;
-    }
-}
-
-// Funcion de hash. Propuesta por Brian Kernighan y Dennis Ritchie
-unsigned int stringhash(char *string){
-    unsigned int h = 0;
-    for(int i = 0; *string; string++) h = 131*h + *string;
-    return(h%B);
-}
-
-// Buscar si una ruta esta en la tabla
-pcelda buscar(char *ruta, char *termbusq){
-    pcelda cp; /* current pointer */
-
-    for(cp = hashtable[stringhash(termbusq)]; cp != NULL; cp = cp->next){
-        if(strcmp(ruta, cp->ruta) == 0){
-            return (cp); // Encontre una ruta.
-        }
-    }
-    return (NULL);
-}
-
-// Insertar ruta a la tabla
-char *strsave(char *s)
-{ char *p;
-    if (( p = malloc(strlen(s) + 1)) != NULL)
-    strcpy(p, s);
-    return (p);
-}
-
-pcelda insertar(char *ruta, char*termbusq)
-{   pcelda cp /* current pointer */;
-    int hval;
-    if (( cp = buscar(ruta, termbusq)) == NULL)
-    {
-        cp = ( pcelda ) malloc(sizeof ( tcelda ));
-        if (cp == NULL) return (NULL);
-        if (( cp -> ruta  = strsave(ruta)) == NULL ) return (NULL);
-        hval = stringhash(termbusq);
-        cp -> next = hashtable[hval];
-        hashtable[hval] = cp;
-        return (cp);
-    }
-    else return (NULL);
-}
-
-// Buscador de la tabla de Hash
-// Dado un termino de busqueda lo busca en la tabla de hash
-// Al entrar en la celda luego verifica que rutas cumplen con el termino
-// de busqueda indicado. Por ahora se asume que el nombre de los archivos
-// son con - para hacer el split.
-void buscarruta(char *termbusq){
-    pcelda cp; /* current pointer */
-
-    for(cp = hashtable[stringhash(termbusq)]; cp != NULL; cp = cp->next){
-        encontrartermino(cp->ruta, termbusq);
-    }
-}
-
-// Verifica si un termino de busqueda es encontrado en una ruta.
-void encontrartermino(char *ruta, char*termbusq){
-    char *filename;
-    char *claves;
-    filename = strsave(basename(ruta)); //basename devuelve el nombre de un archivo dado una ruta
-    claves = strtok(filename,"-.");
-    while( claves != NULL ){
-        if(strcmp(claves, termbusq) == NULL){
-            printf("%s\n", ruta);
-        } // Encontre un tembusq.
-        claves = strtok(NULL, "-.");
-    }
-}
 
 // Funcion para cargar el indexador
 void *cargartable(void *args){
@@ -165,20 +77,9 @@ void *cargartable(void *args){
         insertar(ruta, termbusq);
     }
     fclose(indice);
-    printf("termine\n");
     pthread_mutex_unlock(&lock);
     buscarruta(termdebusqueda);
     return NULL;
-}
-
-void insertarrutaarchivo(char *path, char *claves){
-    FILE *indice;
-    indice = fopen(archivoindice,"a");
-    if ( indice == NULL ){
-        return;
-    }
-    fprintf(indice, "%s %s\n", path, claves);
-    fclose(indice);
 }
 
 void navegar_directorio(char* routename, int heightvalue){
@@ -189,6 +90,7 @@ void navegar_directorio(char* routename, int heightvalue){
     char *archivoaux;
     char *claves;
     int found;
+    int estaenindice;
 
     if (!(dir = opendir(routename))){
         return;
@@ -202,19 +104,22 @@ void navegar_directorio(char* routename, int heightvalue){
                 if(heightvalue <= maxlength) navegar_directorio(path, heightvalue);
             } 
             else {
+                pthread_mutex_lock(&lock);
                 snprintf(path, sizeof(path), "%s/%s", routename, entry->d_name);
                 archivoaux = strsave(entry->d_name);
                 claves = strtok(archivoaux, "-.");
-                pthread_mutex_lock(&lock);
+                estaenindice = 1;
                 while( claves != NULL ){
                     if (!buscar(path, claves)){
+                        found++;
                         insertarrutaarchivo(path, claves);
-                        claves = strtok(NULL, "-.");
-                        if(found == 1) encontrartermino(path, termdebusqueda);
+                        claves = strtok(NULL, ".-");
+                        estaenindice = 0;
                     }else{
-                        claves = strtok(NULL, "-.");
+                        claves = strtok(NULL, ".-");
                     }
                 }
+                if(!estaenindice) encontrartermino(path, termdebusqueda);
                 pthread_mutex_unlock(&lock);
             }
         }
@@ -222,7 +127,6 @@ void navegar_directorio(char* routename, int heightvalue){
 }
 
 void *indizar(void *args){
-
     
     DIR *dir;
     struct dirent *entry;
@@ -233,6 +137,7 @@ void *indizar(void *args){
     char *routename = (char *) p->routename;
     int heightvalue = (int) p->height;
     int found;
+    int estaenindice;
 
     if (!(dir = opendir(routename))){
         return NULL;
@@ -246,35 +151,28 @@ void *indizar(void *args){
                 if(heightvalue <= maxlength) navegar_directorio(path, heightvalue);
             } 
             else {
-                snprintf(path, sizeof(path), "%s/%s", routename, entry->d_name);
-                archivoaux = strsave(entry->d_name);
-                claves = strtok(archivoaux, "-.");
                 pthread_mutex_lock(&lock);
+                snprintf(path, sizeof(path), "%s/%s", routename, entry->d_name);
+                archivoaux = strsave(basename(path));
+                claves = strtok(archivoaux, "-.");
+                estaenindice = 1;
                 while( claves != NULL ){
                     if (!buscar(path, claves)){
                         found++;
                         insertarrutaarchivo(path, claves);
-                        claves = strtok(NULL, "-.");
-                        if(found == 1) encontrartermino(path, termdebusqueda);
+                        claves = strtok(NULL, ".-");
+                        estaenindice = 0;
                     }else{
-                        claves = strtok(NULL, "-.");
+                        claves = strtok(NULL, ".-");
                     }
                 }
+                if(!estaenindice) encontrartermino(path, termdebusqueda);
                 pthread_mutex_unlock(&lock);
             }
         }
     return NULL;
-}
 
-// Declaracion de flags
-static struct option long_options[] ={
-    {"noupdate",    no_argument,      0, 'u'},
-    {"noadd",       no_argument,       0, 'a'},
-    {"index",       required_argument, 0, 'i'},
-    {"max",         required_argument, 0, 'm'},
-    {"dir",         required_argument, 0, 'd'},
-    {0, 0, 0, 0}
-};
+}
 
 int main(int argc, char *args[]){
 
@@ -312,11 +210,6 @@ int main(int argc, char *args[]){
             abort ();
         }
     }
-    if (pthread_mutex_init(&lock, NULL) != 0)
-    {
-        printf("\n mutex init has failed\n");
-        return 1;
-    }
     maketablenull();
     pthread_t cargarindice;
     pthread_t buscarindice;
@@ -327,7 +220,7 @@ int main(int argc, char *args[]){
     }
     if (pthread_mutex_init(&lock, NULL) != 0)
     {
-        printf("\n mutex init has failed\n");
+        printf("\n Fallo inicio de mutex \n");
         return 1;
     }
     if (pthread_create ( &cargarindice, NULL, &cargartable, archivoindice) != 0){
@@ -344,4 +237,5 @@ int main(int argc, char *args[]){
     pthread_join(cargarindice, NULL);
     pthread_join(indezador, NULL);
     pthread_mutex_destroy(&lock);
+
 }

@@ -1,0 +1,3 @@
+./prueba/xdxd xdxd
+./prueba/hola.txt hola
+./prueba/hola.txt txt

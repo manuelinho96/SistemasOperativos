@@ -131,6 +131,7 @@ void encontrartermino(char *ruta, char*termbusq){
 
 // Funcion para cargar el indexador
 void *cargartable(void *args){
+    pthread_mutex_lock(&lock);
     FILE *indice;
     char *nombre = (char *) args;
     indice = fopen(nombre, "r");
@@ -148,6 +149,7 @@ void *cargartable(void *args){
     fseek(indice, 0, SEEK_END );
     if (ftell( indice ) == 0 )
     {
+        pthread_mutex_unlock(&lock);
         return NULL;
     }
     fseek(indice, 0, SEEK_SET );
@@ -163,6 +165,8 @@ void *cargartable(void *args){
         insertar(ruta, termbusq);
     }
     fclose(indice);
+    printf("termine\n");
+    pthread_mutex_unlock(&lock);
     buscarruta(termdebusqueda);
     return NULL;
 }
@@ -201,6 +205,7 @@ void navegar_directorio(char* routename, int heightvalue){
                 snprintf(path, sizeof(path), "%s/%s", routename, entry->d_name);
                 archivoaux = strsave(entry->d_name);
                 claves = strtok(archivoaux, "-.");
+                pthread_mutex_lock(&lock);
                 while( claves != NULL ){
                     if (!buscar(path, claves)){
                         insertarrutaarchivo(path, claves);
@@ -210,6 +215,7 @@ void navegar_directorio(char* routename, int heightvalue){
                         claves = strtok(NULL, "-.");
                     }
                 }
+                pthread_mutex_unlock(&lock);
             }
         }
     return;
@@ -243,6 +249,7 @@ void *indizar(void *args){
                 snprintf(path, sizeof(path), "%s/%s", routename, entry->d_name);
                 archivoaux = strsave(entry->d_name);
                 claves = strtok(archivoaux, "-.");
+                pthread_mutex_lock(&lock);
                 while( claves != NULL ){
                     if (!buscar(path, claves)){
                         found++;
@@ -253,6 +260,7 @@ void *indizar(void *args){
                         claves = strtok(NULL, "-.");
                     }
                 }
+                pthread_mutex_unlock(&lock);
             }
         }
     return NULL;
@@ -277,11 +285,11 @@ int main(int argc, char *args[]){
         if (flags == -1) break;
         switch (flags) {
             case 'u':
-            puts ("option -u\n");
+            printf("Indica que no se debe entrar en directorios que ya estén en el índice. No implementado\n");
             break;
 
             case 'a':
-            puts ("option -a\n");
+            printf("Indica que no se debe entrar en directorios que no estén en el índice. No implementado\n");
             break;
 
             case 'i':
@@ -317,10 +325,15 @@ int main(int argc, char *args[]){
     {
         termdebusqueda = strsave(args[optind]);
     }
+    if (pthread_mutex_init(&lock, NULL) != 0)
+    {
+        printf("\n mutex init has failed\n");
+        return 1;
+    }
     if (pthread_create ( &cargarindice, NULL, &cargartable, archivoindice) != 0){
             printf("Error al crear el hilo. \n"); 
             exit(EXIT_FAILURE); 
-    } 
+    }
     parametros *p = malloc(sizeof(parametros));
     p->height = 0;
     strcpy(p->routename, inicio);

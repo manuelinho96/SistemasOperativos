@@ -19,6 +19,9 @@
 #include <getopt.h>
 
 
+// Mutex
+pthread_mutex_t lock;
+
 // Variable globales
 int maxlength = 20;
 
@@ -145,7 +148,7 @@ void *cargartable(void *args){
     fseek(indice, 0, SEEK_END );
     if (ftell( indice ) == 0 )
     {
-        return;
+        return NULL;
     }
     fseek(indice, 0, SEEK_SET );
     while ( !feof(indice) ){
@@ -160,6 +163,7 @@ void *cargartable(void *args){
         insertar(ruta, termbusq);
     }
     fclose(indice);
+    buscarruta(termdebusqueda);
     return NULL;
 }
 
@@ -180,12 +184,14 @@ void navegar_directorio(char* routename, int heightvalue){
     char path[PATH_MAX];
     char *archivoaux;
     char *claves;
+    int found;
 
     if (!(dir = opendir(routename))){
         return;
     }
     heightvalue++;
     while((entry = readdir(dir)) != NULL){
+        found = 0;
         if (entry->d_type == DT_DIR) {
             if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0) continue;
                 snprintf(path, sizeof(path), "%s/%s", routename, entry->d_name);
@@ -197,10 +203,9 @@ void navegar_directorio(char* routename, int heightvalue){
                 claves = strtok(archivoaux, "-.");
                 while( claves != NULL ){
                     if (!buscar(path, claves)){
-                        insertar(path, claves);
                         insertarrutaarchivo(path, claves);
                         claves = strtok(NULL, "-.");
-                        encontrartermino(path, termdebusqueda);
+                        if(found == 1) encontrartermino(path, termdebusqueda);
                     }else{
                         claves = strtok(NULL, "-.");
                     }
@@ -221,12 +226,14 @@ void *indizar(void *args){
     parametros *p = (parametros *) args;
     char *routename = (char *) p->routename;
     int heightvalue = (int) p->height;
+    int found;
 
     if (!(dir = opendir(routename))){
         return NULL;
     }
     heightvalue++;
     while((entry = readdir(dir)) != NULL){
+        found = 0;
         if (entry->d_type == DT_DIR) {
             if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0) continue;
                 snprintf(path, sizeof(path), "%s/%s", routename, entry->d_name);
@@ -238,10 +245,10 @@ void *indizar(void *args){
                 claves = strtok(archivoaux, "-.");
                 while( claves != NULL ){
                     if (!buscar(path, claves)){
-                        insertar(path, claves);
+                        found++;
                         insertarrutaarchivo(path, claves);
                         claves = strtok(NULL, "-.");
-                        encontrartermino(path, termdebusqueda);
+                        if(found == 1) encontrartermino(path, termdebusqueda);
                     }else{
                         claves = strtok(NULL, "-.");
                     }
@@ -297,6 +304,11 @@ int main(int argc, char *args[]){
             abort ();
         }
     }
+    if (pthread_mutex_init(&lock, NULL) != 0)
+    {
+        printf("\n mutex init has failed\n");
+        return 1;
+    }
     maketablenull();
     pthread_t cargarindice;
     pthread_t buscarindice;
@@ -309,7 +321,6 @@ int main(int argc, char *args[]){
             printf("Error al crear el hilo. \n"); 
             exit(EXIT_FAILURE); 
     } 
-    pthread_join(cargarindice, NULL);
     parametros *p = malloc(sizeof(parametros));
     p->height = 0;
     strcpy(p->routename, inicio);
@@ -317,6 +328,7 @@ int main(int argc, char *args[]){
         printf("Error al crear el hilo. \n"); 
         exit(EXIT_FAILURE); 
     }
+    pthread_join(cargarindice, NULL);
     pthread_join(indezador, NULL);
-    buscarruta(termdebusqueda);
+    pthread_mutex_destroy(&lock);
 }

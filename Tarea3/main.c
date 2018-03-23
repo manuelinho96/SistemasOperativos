@@ -5,8 +5,9 @@
 #include <unistd.h>
 #include <dirent.h>
 #include <getopt.h>
-#include <funciones.h>
-#include <tablahash.h>
+#include <libgen.h>
+#include "funciones.h"
+#include "tablahash.h"
 
 
 // Mutex
@@ -214,6 +215,10 @@ int main(int argc, char *args[]){
     pthread_t cargarindice;
     pthread_t buscarindice;
     pthread_t indezador;
+    if(argc == 1){
+        printf("Por favor introduzca un termino de busqueda\n");
+        exit(1);
+    }
     if (optind < argc)
     {
         termdebusqueda = strsave(args[optind]);

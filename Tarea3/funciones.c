@@ -1,5 +1,11 @@
 #include <stdio.h>
-extern char *archivoindice;
+#include <unistd.h>
+#include <string.h>
+#include <stdlib.h>
+#include <libgen.h>
+#include <limits.h>
+
+extern char archivoindice[NAME_MAX];
 
 char *strsave(char *s)
 { char *p;

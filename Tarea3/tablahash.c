@@ -1,5 +1,8 @@
 #include "tablahash.h"
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include "funciones.h"
 
 // Tabla de 100 slots
 #define B 100

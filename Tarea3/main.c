@@ -16,10 +16,20 @@
 #include <sys/time.h>
 #include <sched.h>
 #include <dirent.h>
+#include <getopt.h>
 
 
 // Variable globales
-int maxlength;
+int maxlength = 20;
+
+// Director desde el cual se inicia la busqueda
+char inicio[PATH_MAX]=".";
+
+// Archivo que contiene el indice
+char archivoindice[NAME_MAX]="indice.txt";
+
+// Termino de busqueda
+char *termdebusqueda;
 
 // Estructura de las celdas de la tabla
 typedef struct celda
@@ -89,29 +99,31 @@ pcelda insertar(char *ruta, char*termbusq)
     else return (NULL);
 }
 
-// Buscador de la tabla de 
+// Buscador de la tabla de Hash
 // Dado un termino de busqueda lo busca en la tabla de hash
 // Al entrar en la celda luego verifica que rutas cumplen con el termino
 // de busqueda indicado. Por ahora se asume que el nombre de los archivos
 // son con - para hacer el split.
-int buscarruta(char *termbusq){
+void buscarruta(char *termbusq){
     pcelda cp; /* current pointer */
-    char *filename;
-    char *claves;
-    int foundroute = 0;
 
     for(cp = hashtable[stringhash(termbusq)]; cp != NULL; cp = cp->next){
-        filename = strsave(basename(cp->ruta)); //basename devuelve el nombre de un archivo dado una ruta
-        claves = strtok(filename,"-.");
-        while( claves != NULL ){
-            if(strcmp(claves, termbusq) == NULL){
-                printf("%s\n", cp->ruta);
-                foundroute++;
-            } // Encontre un tembusq.
-            claves = strtok(NULL, "-.");
-        }
+        encontrartermino(cp->ruta, termbusq);
     }
-    return foundroute;
+}
+
+// Verifica si un termino de busqueda es encontrado en una ruta.
+void encontrartermino(char *ruta, char*termbusq){
+    char *filename;
+    char *claves;
+    filename = strsave(basename(ruta)); //basename devuelve el nombre de un archivo dado una ruta
+    claves = strtok(filename,"-.");
+    while( claves != NULL ){
+        if(strcmp(claves, termbusq) == NULL){
+            printf("%s\n", ruta);
+        } // Encontre un tembusq.
+        claves = strtok(NULL, "-.");
+    }
 }
 
 // Funcion para cargar el indexador
@@ -124,23 +136,41 @@ void *cargartable(void *args){
     char *termbusq;
     char caracteres[NAME_MAX];
     if (indice == NULL){
-        exit(1);
-    }
-    else{
-        while ( !feof(indice) ){
-            fgets(caracteres,NAME_MAX,indice);
-            string = strtok (caracteres," ");
-            ruta = strsave(string);
-            while (string != NULL){
-                if (string[strlen(string)-1] == '\n') string[strlen(string)-1] = '\0';
-                termbusq = strsave(string);
-                string = strtok (NULL, " ");
-            }
-            insertar(ruta, termbusq);
+        indice = fopen(nombre,"w+");
+        if ( indice == NULL ){
+            perror("error al crear el archivo");
+            exit(1);
         }
+    }
+    fseek(indice, 0, SEEK_END );
+    if (ftell( indice ) == 0 )
+    {
+        return;
+    }
+    fseek(indice, 0, SEEK_SET );
+    while ( !feof(indice) ){
+        fgets(caracteres,NAME_MAX,indice);
+        string = strtok (caracteres," ");
+        ruta = strsave(string);
+        while (string != NULL){
+            if (string[strlen(string)-1] == '\n') string[strlen(string)-1] = '\0';
+            termbusq = strsave(string);
+            string = strtok (NULL, " ");
+        }
+        insertar(ruta, termbusq);
     }
     fclose(indice);
     return NULL;
+}
+
+void insertarrutaarchivo(char *path, char *claves){
+    FILE *indice;
+    indice = fopen(archivoindice,"a");
+    if ( indice == NULL ){
+        return;
+    }
+    fprintf(indice, "%s %s\n", path, claves);
+    fclose(indice);
 }
 
 void navegar_directorio(char* routename, int heightvalue){
@@ -150,44 +180,34 @@ void navegar_directorio(char* routename, int heightvalue){
     char path[PATH_MAX];
     char *archivoaux;
     char *claves;
-    if( maxlength != heightvalue ){
-        if (!(dir = opendir(routename))){
-            return NULL;
-        }
-        while((entry = readdir(dir)) != NULL){
-            if (entry->d_type == DT_DIR) {
-                if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0) continue;
-                    heightvalue++;
-                    snprintf(path, sizeof(path), "%s/%s", routename, entry->d_name);
-                    navegar_directorio(path, heightvalue);
+
+    if (!(dir = opendir(routename))){
+        return;
+    }
+    heightvalue++;
+    while((entry = readdir(dir)) != NULL){
+        if (entry->d_type == DT_DIR) {
+            if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0) continue;
+                snprintf(path, sizeof(path), "%s/%s", routename, entry->d_name);
+                if(heightvalue <= maxlength) navegar_directorio(path, heightvalue);
             } 
-                else {
-                    snprintf(path, sizeof(path), "%s/%s", routename, entry->d_name);
-                    archivoaux = strsave(entry->d_name);
-                    claves = strtok(archivoaux, "-.");
-                    while( claves != NULL ){
-                        if (!buscar(path, claves)){
-                            printf("%s %s\n", path, claves);
-                            insertar(path, claves);
-                            insertarrutaarchivo(path, claves);
-                        }
+            else {
+                snprintf(path, sizeof(path), "%s/%s", routename, entry->d_name);
+                archivoaux = strsave(entry->d_name);
+                claves = strtok(archivoaux, "-.");
+                while( claves != NULL ){
+                    if (!buscar(path, claves)){
+                        insertar(path, claves);
+                        insertarrutaarchivo(path, claves);
+                        claves = strtok(NULL, "-.");
+                        encontrartermino(path, termdebusqueda);
+                    }else{
                         claves = strtok(NULL, "-.");
                     }
                 }
+            }
         }
-    }
-    return NULL;
-
-}
-
-void insertarrutaarchivo(char *path, char *claves){
-    FILE *indice;
-    indice = fopen("indice.txt","a");
-    if ( indice == NULL ){
-        return;
-    }
-    fprintf(indice, "%s %s\n", path, claves);
-    fclose(indice);
+    return;
 }
 
 void *indizar(void *args){
@@ -202,57 +222,101 @@ void *indizar(void *args){
     char *routename = (char *) p->routename;
     int heightvalue = (int) p->height;
 
-    if( maxlength != heightvalue ){
-        if (!(dir = opendir(routename))){
-            return NULL;
-        }
-        while((entry = readdir(dir)) != NULL){
-            if (entry->d_type == DT_DIR) {
-                if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0) continue;
-                    heightvalue++;
-                    snprintf(path, sizeof(path), "%s/%s", routename, entry->d_name);
-                    navegar_directorio(path, heightvalue);
+    if (!(dir = opendir(routename))){
+        return NULL;
+    }
+    heightvalue++;
+    while((entry = readdir(dir)) != NULL){
+        if (entry->d_type == DT_DIR) {
+            if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0) continue;
+                snprintf(path, sizeof(path), "%s/%s", routename, entry->d_name);
+                if(heightvalue <= maxlength) navegar_directorio(path, heightvalue);
             } 
-                else {
-                    snprintf(path, sizeof(path), "%s/%s", routename, entry->d_name);
-                    archivoaux = strsave(entry->d_name);
-                    claves = strtok(archivoaux, "-.");
-                    while( claves != NULL ){
-                        if (!buscar(path, claves)){
-                            printf("%s %s\n", path, claves);
-                            insertar(path, claves);
-                            insertarrutaarchivo(path, claves);
-                        }
+            else {
+                snprintf(path, sizeof(path), "%s/%s", routename, entry->d_name);
+                archivoaux = strsave(entry->d_name);
+                claves = strtok(archivoaux, "-.");
+                while( claves != NULL ){
+                    if (!buscar(path, claves)){
+                        insertar(path, claves);
+                        insertarrutaarchivo(path, claves);
+                        claves = strtok(NULL, "-.");
+                        encontrartermino(path, termdebusqueda);
+                    }else{
                         claves = strtok(NULL, "-.");
                     }
                 }
+            }
         }
-    }
     return NULL;
 }
 
-int main(int argv, char *args[]){
+// Declaracion de flags
+static struct option long_options[] ={
+    {"noupdate",    no_argument,      0, 'u'},
+    {"noadd",       no_argument,       0, 'a'},
+    {"index",       required_argument, 0, 'i'},
+    {"max",         required_argument, 0, 'm'},
+    {"dir",         required_argument, 0, 'd'},
+    {0, 0, 0, 0}
+};
 
-    maxlength = 20;
-    char nombre[200] = "indice.txt";
+int main(int argc, char *args[]){
+
+    int flags;
+    while(flags != -1){
+        int option_index = 0;
+        flags = getopt_long(argc, args, "uai:m:d:", long_options, &option_index);
+        if (flags == -1) break;
+        switch (flags) {
+            case 'u':
+            puts ("option -u\n");
+            break;
+
+            case 'a':
+            puts ("option -a\n");
+            break;
+
+            case 'i':
+            strcpy(archivoindice, optarg);
+            break;
+
+            case 'm':
+            maxlength = atoi(optarg);
+            break;
+
+            case 'd':
+            strcpy(inicio, optarg);
+            break;
+
+            case '?':
+            /* getopt_long already printed an error message. */
+            break;
+
+            default:
+            abort ();
+        }
+    }
     maketablenull();
     pthread_t cargarindice;
     pthread_t buscarindice;
     pthread_t indezador;
-    if (pthread_create ( &cargarindice, NULL, &cargartable, nombre) != 0){
-        printf("Error al crear el hilo. \n"); 
-        exit(EXIT_FAILURE); 
+    if (optind < argc)
+    {
+        termdebusqueda = strsave(args[optind]);
     }
+    if (pthread_create ( &cargarindice, NULL, &cargartable, archivoindice) != 0){
+            printf("Error al crear el hilo. \n"); 
+            exit(EXIT_FAILURE); 
+    } 
     pthread_join(cargarindice, NULL);
     parametros *p = malloc(sizeof(parametros));
     p->height = 0;
-    strcpy(p->routename, ".");
+    strcpy(p->routename, inicio);
     if (pthread_create ( &indezador, NULL, &indizar, p) != 0){
         printf("Error al crear el hilo. \n"); 
         exit(EXIT_FAILURE); 
     }
     pthread_join(indezador, NULL);
-    printf("resultado de buscar %s\n", args[1]);
-    buscarruta(args[1]);
-    
+    buscarruta(termdebusqueda);
 }
